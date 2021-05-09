@@ -1,12 +1,26 @@
 // ./src/app.js
 
+// External package dependencies.
+import {
+  Redirect, Route, Switch, useLocation,
+} from 'react-router-dom';
+
+// Local imports.
+import { Home } from 'components';
+
 const App = () => {
+  // Get the current location.
+  const { pathname } =useLocation();
+
+  // Return the app routes.
   return (
-    <div className="App">
-      <header className="App-header">
-        Movies 'n Chill
-      </header>
-    </div>
+    <Switch>
+      {/* If a route is accessed with a a trailing slash, redirect to
+      the route without the slash. */}
+      <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
+      <Route exact path="/" component={Home} />
+      {/* <Route exact path="/"><p>HOME PAGE</p></Route> */}
+    </Switch>
   );
 }
 
