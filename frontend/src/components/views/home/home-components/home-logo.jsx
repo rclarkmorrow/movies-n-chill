@@ -6,7 +6,7 @@ import React from 'react';
 // Local imports.
 import {
     LOGO_ALT_TEXT, LOGO_FILE, LOGO_SIZE,
-} from 'components/views/home/theme';
+} from 'components/views/home/styles';
 
 // Create logo for the homepage.
 const HomeLogo = () => (

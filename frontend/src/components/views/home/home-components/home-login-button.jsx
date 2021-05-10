@@ -7,7 +7,7 @@ import { Button } from '@material-ui/core';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 // Local imports.
-import useStyles, { BTN_LOGIN } from 'components/views/home/theme';
+import useStyles, { BTN_LOGIN } from 'components/views/home/styles';
 
 
 // Create the homepage login button.

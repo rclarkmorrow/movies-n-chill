@@ -10,10 +10,10 @@ import {
   PANEL_IMG_ALT_TEXT, PANEL_IMG_CREATOR,
   PANEL_IMG_FIT, PANEL_IMG, PANEL_IMG_SIZE,
   PANEL_IMG_SOURCE,
-} from 'components/views/home/theme/settings';
+} from 'components/views/home/styles/settings';
 
 // Import styles.
-import useStyles from 'components/views/home/theme/styles'
+import useStyles from 'components/views/home/styles/styles'
 
 // Export constants.
 export {

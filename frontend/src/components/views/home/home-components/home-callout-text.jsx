@@ -7,7 +7,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 
 // Local imports.
-import useStyles, { CALLOUT_TEXT } from 'components/views/home/theme';
+import useStyles, { CALLOUT_TEXT } from 'components/views/home/styles';
 
 // Create the callout text component of the homepage.
 const HomeCalloutText = () => {
