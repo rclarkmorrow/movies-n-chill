@@ -8,7 +8,7 @@ import {
   PANEL_IMG_ALT_TEXT, PANEL_IMG_CREATOR,
   PANEL_IMG_FIT, PANEL_IMG, PANEL_IMG_SIZE,
   PANEL_IMG_SOURCE,
-} from 'components/views/home/theme';
+} from 'components/views/home/styles';
 
 // Create an image in a container that uses
 // cover fit to fill the available panel space.

@@ -7,7 +7,7 @@ import { Button } from '@material-ui/core';
 import { Create } from '@material-ui/icons/';
 
 // Local imports.
-import useStyles, { BTN_SIGN_UP } from 'components/views/home/theme';
+import useStyles, { BTN_SIGN_UP } from 'components/views/home/styles';
 
 // Create the homepage sign up button.
 const HomeSignUpButton = () => {
