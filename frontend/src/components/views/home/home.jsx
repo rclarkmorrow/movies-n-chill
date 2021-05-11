@@ -6,7 +6,6 @@ import { Redirect } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
 //Local imports
-// import { HomeMain } from 'components/home/home-components';
 import { HomeMain } from 'components/views/home/home-components';
 import { Loading } from 'components';
 

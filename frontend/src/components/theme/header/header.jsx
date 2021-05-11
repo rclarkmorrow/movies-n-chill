@@ -19,7 +19,7 @@ const Header = () => {
   // Return the main header component (navigation bar).
   return (
     // Define the NavBar with classes and add component elements.
-    <AppBar position="fixed" className={classes.applicationBar}>
+    <AppBar position="static" className={classes.applicationBar}>
       <Toolbar>
       <Grid container justify={"space-between"} alignItems="center">
         <Grid item xs={false} sm={3} m={3}>
