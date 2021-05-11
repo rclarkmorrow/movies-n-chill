@@ -18,7 +18,7 @@ const Home = () => {
     isLoading ?
       <Loading />
     : isAuthenticated ?
-      <div><HomeMain /><p>AUTHENTICATED</p></div>
+      <Redirect to="/profile" />
     : <HomeMain />
   );
 };
