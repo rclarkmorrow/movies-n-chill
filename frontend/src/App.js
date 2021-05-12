@@ -6,7 +6,10 @@ import {
 } from 'react-router-dom';
 
 // Local imports.
-import { Header, Home, Profile } from 'components';
+import {
+  Header, Home, Matches,
+  Movies, Profile
+} from 'components';
 // import { Profile } from 'components/views/profile';
 
 const App = () => {
@@ -30,7 +33,8 @@ const App = () => {
         the route without the slash. */}
         <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
         <Route exact path="/" component={Home} />
-        {/* Holding spot for a profile page to test theme and header load */}
+        <Route path="/matches" component={Matches} />
+        <Route path="/movies" component={Movies} />
         <Route path="/profile" component={Profile} />
         {/* update with 404 page component */}
         <Route><p>ERROR</p></Route>
