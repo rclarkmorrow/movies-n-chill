@@ -8,9 +8,9 @@ import {
 // Local imports.
 import {
   Header, Home, Matches,
-  Movies, Profile
+  Movies, Profile,
 } from 'components';
-// import { Profile } from 'components/views/profile';
+import { ProtectedRoute } from 'auth';
 
 const App = () => {
   // Get the current location.
@@ -33,9 +33,9 @@ const App = () => {
         the route without the slash. */}
         <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
         <Route exact path="/" component={Home} />
-        <Route path="/matches" component={Matches} />
-        <Route path="/movies" component={Movies} />
-        <Route path="/profile" component={Profile} />
+        <ProtectedRoute path="/matches" component={Matches} />
+        <ProtectedRoute path="/movies" component={Movies} />
+        <ProtectedRoute path="/profile" component={Profile} />
         {/* update with 404 page component */}
         <Route><p>ERROR</p></Route>
       </Switch>
