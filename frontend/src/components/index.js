@@ -6,7 +6,12 @@ import CenteredPage from 'components/theme/centered-page';
 import Header from 'components/theme/header';
 import Home from 'components/views/home';
 import Loading from 'components/theme/loading';
+import Matches from 'components/views/matches';
+import Movies from 'components/views/movies';
 import Profile from 'components/views/profile';
 
 // Exports.
-export { CenteredPage, Header, Home, Loading, Profile };
+export {
+  CenteredPage, Header, Home, Loading,
+  Matches, Movies, Profile
+};
