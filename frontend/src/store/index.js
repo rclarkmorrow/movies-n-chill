@@ -19,7 +19,7 @@ import {
     editUserProfile,
     fetchUserProfile,
     userProfileSelector,
-} from 'store/slices/current-user-slice';
+} from 'store/slices/user-profile-slice';
 
 // Export the store as default.
 export default store;
