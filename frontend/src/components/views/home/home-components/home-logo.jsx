@@ -18,5 +18,4 @@ const HomeLogo = () => (
     ></img>
 );
 
-// Export the homepage logo.
 export default HomeLogo;

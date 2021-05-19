@@ -61,7 +61,7 @@ const userProfileSlice = createSlice({
       state.hasErrors = true;
     }
   },
-})
+});
 
 // Export the actions generated from the slice.
 export const {
@@ -85,14 +85,13 @@ export default userProfileSlice.reducer;
 // Asynchronous thunk action (where the API call lives).
 export const fetchUserProfile = (props) => {
     console.log(`start fetch user`)
-    // const { getTokenSilently } = useAuth0()
   return async dispatch => {
     dispatch(getUserProfile());
     try {
       const { profileId, userId } = props;
       const useId = userId ? userId : profileId;
       const URIId = encodeURIComponent(useId);
-      const response = await axios.get(`${baseURI}${URIId}`);
+      const response = await axios.get(`${baseURI}/${URIId}`);
       dispatch(getUserProfileSuccess(response.data.user));
     } catch (error) {
       dispatch(getUserProfileFailure());

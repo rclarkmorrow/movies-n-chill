@@ -19,5 +19,4 @@ const NavLogo = () => (
     />
 );
 
-// Export the NavLogo
 export default NavLogo;

@@ -14,8 +14,8 @@ import {
 
 // The main Navigation bar component.
 const Header = () => {
-  // Setup the classes.
   const classes = useStyles();
+
   // Return the main header component (navigation bar).
   return (
     // Define the NavBar with classes and add component elements.
@@ -48,6 +48,4 @@ const Header = () => {
   );
 };
 
-
-// Export the NavBar.
 export default Header;

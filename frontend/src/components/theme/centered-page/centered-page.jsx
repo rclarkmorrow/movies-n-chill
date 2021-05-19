@@ -15,6 +15,7 @@ import useStyles from 'components/theme/centered-page/styles';
 // a background for other components.
 const CenteredPage = ({children}) => {
   const classes = useStyles();
+
   return (
   <Grid container>
     <Grid item xs={false} sm={2} />

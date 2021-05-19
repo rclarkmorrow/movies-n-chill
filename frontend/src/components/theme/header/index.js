@@ -1,8 +1,7 @@
 // ./src/components/theme/header/index.js
 
-// This file imports and exports authorization components
-// and modules.
+// This file imports and exports the Header component.
+
 import Header from 'components/theme/header/header';
 
-// Exports.
 export default Header;

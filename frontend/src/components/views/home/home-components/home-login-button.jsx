@@ -32,5 +32,4 @@ const HomeLoginButton = () => {
   );
 };
 
-// Export the LoginButton;
 export default HomeLoginButton;

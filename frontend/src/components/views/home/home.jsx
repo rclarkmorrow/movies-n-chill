@@ -22,5 +22,4 @@ const Home = () => {
   );
 };
 
-// Export the home view.
 export default Home;

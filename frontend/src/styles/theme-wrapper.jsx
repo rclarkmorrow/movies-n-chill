@@ -8,6 +8,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 // Local imports.
 import { theme, useStyle } from 'styles';
 
+// The ThemeWrapper wraps all main application components
+// in the styles created in .src/styles/styles.js
 const ThemeWrapper = ({ children }) => {
   const classes=useStyle();
 
@@ -21,5 +23,4 @@ const ThemeWrapper = ({ children }) => {
   )
 }
 
-// Export the theme wrapper.
 export default ThemeWrapper;

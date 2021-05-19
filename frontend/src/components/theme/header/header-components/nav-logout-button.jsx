@@ -12,10 +12,7 @@ import useStyles from 'components/theme/header/styles';
 
 // Create the homepage login button.
 const NavLogoutButton = (props) => {
-  // Setup the login action.
   const { logout } =useAuth0();
-
-  // Setup the button classes.
   const classes = useStyles();
 
   // Define the login button and return it with
@@ -39,5 +36,4 @@ const NavLogoutButton = (props) => {
   );
 };
 
-// Export the LogoutButton.
 export default NavLogoutButton;

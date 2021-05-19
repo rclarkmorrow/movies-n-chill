@@ -14,5 +14,4 @@ const HomeRightPanel = () => (
   </Grid>
 );
 
-// Export the right panel of the homepage.
 export default HomeRightPanel;

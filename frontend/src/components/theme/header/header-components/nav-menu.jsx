@@ -57,5 +57,4 @@ const NavMenu = () => {
   )
 }
 
-// Export the navigation menu.
 export default NavMenu;
