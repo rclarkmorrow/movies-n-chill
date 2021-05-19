@@ -1,14 +1,16 @@
 // ./src/app.js
 
 // External package dependencies.
+import React from 'react';
 import {
   Redirect, Route, Switch, useLocation,
 } from 'react-router-dom';
 
+
 // Local imports.
 import {
-  Header, Home, Matches,
-  Movies, Profile,
+  Home, Matches, Movies,
+  NotFound, Profile,
 } from 'components';
 import { ProtectedRoute } from 'auth';
 
@@ -18,16 +20,7 @@ const App = () => {
 
   // Return the app routes.
   return (
-    <div>
-      {/* Display the header on every page but the home page. Putting it here reduces
-      amount of times the header component is rendered. */}
-      <Route
-        path="/"
-        render={
-          ( props ) => (props.location.pathname !== "/") &&
-          <Header />
-        }
-      />
+    <>
       <Switch>
         {/* If a route is accessed with a a trailing slash, redirect to
         the route without the slash. */}
@@ -37,9 +30,9 @@ const App = () => {
         <ProtectedRoute path="/movies" component={Movies} />
         <ProtectedRoute path="/profile" component={Profile} />
         {/* update with 404 page component */}
-        <Route><p>ERROR</p></Route>
+        <ProtectedRoute component={NotFound} />
       </Switch>
-    </div>
+    </>
   );
 }
 
