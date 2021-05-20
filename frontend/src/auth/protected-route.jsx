@@ -15,12 +15,15 @@ const ProtectedRoute = ({ component: ComponentToRender, ...args }) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const { isAuthenticated, isLoading, user } = useAuth0();
-  const { currentUser, isLoading: isUserLoading } = useSelector(currentUserSelector)
+  const {
+    currentUser,
+    isLoading: isUserLoading
+  } = useSelector(currentUserSelector);
 
   useEffect(() => {
       if (isAuthenticated) {
         const { sub } = user
-        dispatch(fetchCurrentUser({ sub }))
+        dispatch(fetchCurrentUser({ sub }));
       }
 
   }, [dispatch, isAuthenticated, user]);

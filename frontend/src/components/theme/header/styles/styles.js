@@ -1,7 +1,7 @@
 // ./src/components/theme/header/styles/styles.js
 
 // External package dependencies.
-import { makeStyles }from '@material-ui/core/styles'
+import { makeStyles }from '@material-ui/core/styles';
 
 export default makeStyles(theme => ({
   applicationBar:{
@@ -24,31 +24,3 @@ export default makeStyles(theme => ({
     },
   },
 }));
-
-// // Button constants.
-// const navBackgroundColor = `#923d87`;
-// // const highlightColor = `#662a5e`;
-// const textColor = `#FFFFFF`;
-
-// const useStyles = makeStyles({
-//   navBarDisplayFlex:{
-//     // display: 'flex',
-//     // justifyContent: 'space-between',
-//   },
-//   navDisplayFlex:{
-//     // display: 'flex',
-//     // // justifyContent: 'space-between',
-//     // flexDirection: 'row-reverse'
-//   },
-//   toolbarRight:{
-//     // marginLeft: 'auto',
-//     display: 'flex',
-//     justifyContent: 'space-between',
-//     // flexDirection: 'row-reverse'
-//   },
-//   linkText: {
-//     textDecoration: 'none',
-//     textTransform: 'uppercase',
-//     color: '#FFFFFF',
-//   },
-// });

@@ -32,5 +32,4 @@ const useStyle = makeStyles(() => ({
   },
 }));
 
-// Export the theme.
 export { theme, useStyle };

@@ -1,4 +1,4 @@
-// ./src/components/theme/page-not-found/page-not-found.jsx
+// ./src/components/theme/not-found/not-found.jsx
 
 // External package dependencies.
 import React from 'react';
@@ -14,6 +14,8 @@ import useStyles, {
 
 const NotFound = () => {
   const classes = useStyles();
+
+  // Create and return the 404 error page.
   return (
     <>
       <Header />

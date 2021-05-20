@@ -1,7 +1,8 @@
 // ./src/components/views/home/home-components/index.js
 
-// This file imports and exports authorization components
+// This file imports and exports Home components
 // and modules.
+
 import HomeCalloutText from 'components/views/home/home-components/home-callout-text';
 import HomeLeftPanel from 'components/views/home/home-components/home-left-panel';
 import HomeLoginButton from 'components/views/home/home-components/home-login-button';
@@ -11,7 +12,6 @@ import HomePanelImage from 'components/views/home/home-components/home-panel-ima
 import HomeRightPanel from 'components/views/home/home-components/home-right-panel';
 import HomeSignUpButton from 'components/views/home/home-components/home-sign-up-button';
 
-// Exports.
 export {
   HomeCalloutText, HomeLeftPanel,
   HomeLoginButton, HomeLogo, HomeMain,

@@ -43,5 +43,4 @@ const HomeCalloutText = () => {
   );
 };
 
-// Export homepage callout text.
 export default HomeCalloutText;

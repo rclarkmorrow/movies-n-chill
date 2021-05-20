@@ -18,8 +18,6 @@ export const LOGO_FILE = `${process.env.PUBLIC_URL}/logo512.png`;
 export const LOGO_SIZE = `300px`;
 
 // Panel image constants.
-// Define image constants.
-
 export const PANEL_IMG_ALT_TEXT = `A view looks in through the windows of a` +
                                   ` small cinema. Ticket machines and movie` +
                                   ` listings are on the left, and stairs lead` +

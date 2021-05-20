@@ -31,7 +31,6 @@ const HomeLeftPanel = () => (
         </Grid>
       </Grid>
     </Grid>
-  );
+);
 
-  // Export the main panel of the homepage.
-  export default HomeLeftPanel;
+export default HomeLeftPanel;

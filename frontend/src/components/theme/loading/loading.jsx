@@ -25,5 +25,4 @@ const Loading = () => (
     </div>
 );
 
-// Export the loading page.
 export default Loading;

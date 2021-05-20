@@ -1,7 +1,7 @@
 // ./src/components/views/home.style.js
 
 // External package dependencies.
-import { makeStyles }from '@material-ui/core/styles'
+import { makeStyles }from '@material-ui/core/styles';
 
 // Style constants
 const calloutTextColor = `#662a5e`;

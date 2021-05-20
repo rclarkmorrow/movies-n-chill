@@ -1,14 +1,13 @@
 // ./src/styles/index.js
 
-// This file imports and exports authorization components
-// and modules.
+// This file imports and exports style components
+// and themes for the main app.
+
 import { theme, useStyle  } from 'styles/styles';
 import ThemeWrapper from 'styles/theme-wrapper';
 
-// Exports.
 export {
   theme,
   ThemeWrapper,
   useStyle,
 };
-

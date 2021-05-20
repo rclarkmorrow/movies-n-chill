@@ -28,5 +28,4 @@ const HomePanelImage = () => (
   </div>
 );
 
-// Export the image for the home panel.
 export default HomePanelImage;
