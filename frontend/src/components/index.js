@@ -9,8 +9,10 @@ import Loading from 'components/theme/loading';
 import Matches from 'components/views/matches';
 import Movies from 'components/views/movies';
 import NotFound from 'components/theme/not-found';
+import { Error404 } from 'components/theme/not-found';
 import Profile from 'components/views/profile';
 export {
   CenteredPage, Header, Home, Loading,
-  Matches, Movies, NotFound, Profile,
+  Matches, Movies, NotFound, Error404,
+  Profile,
 };
