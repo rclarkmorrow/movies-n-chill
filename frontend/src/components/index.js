@@ -8,11 +8,13 @@ import Home from 'components/views/home';
 import Loading from 'components/theme/loading';
 import Matches from 'components/views/matches';
 import Movies from 'components/views/movies';
-import NotFound from 'components/theme/not-found';
+import NotFoundPage from 'components/theme/not-found';
+import { NotFoundError } from 'components/theme/not-found';
 import Profile from 'components/views/profile';
 
 // Exports.
 export {
   CenteredPage, Header, Home, Loading,
-  Matches, Movies, NotFound, Profile,
+  Matches, Movies, NotFoundPage, NotFoundError,
+  Profile,
 };

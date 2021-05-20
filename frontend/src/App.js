@@ -10,7 +10,7 @@ import {
 // Local imports.
 import {
   Home, Matches, Movies,
-  NotFound, Profile,
+  NotFoundPage, Profile,
 } from 'components';
 import { ProtectedRoute } from 'auth';
 
@@ -30,7 +30,7 @@ const App = () => {
         <ProtectedRoute path="/movies" component={Movies} />
         <ProtectedRoute path="/profile" component={Profile} />
         {/* update with 404 page component */}
-        <ProtectedRoute component={NotFound} />
+        <ProtectedRoute component={NotFoundPage} />
       </Switch>
     </>
   );

@@ -1,6 +1,10 @@
 // ./src/components/theme/page-not-found/index.js
 
 
-import NotFound from 'components/theme/not-found/not-found';
+import NotFoundPage from 'components/theme/not-found/not-found-page';
 
-export default NotFound;
+import { NotFoundError } from 'components/theme/not-found/not-found-components';
+
+export { NotFoundError };
+
+export default NotFoundPage;
