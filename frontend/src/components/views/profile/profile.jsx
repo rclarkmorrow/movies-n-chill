@@ -1,25 +1,67 @@
 // ./src/components/views/profile/profile.jsx
 
 // External package dependencies.
-import {Box, Grid, Typography } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAuth0 } from '@auth0/auth0-react';
 
 // Local imports.
-import { CenteredPage, Header } from 'components';
+import { Error404, Header, Loading } from 'components';
+import { ProfileMain } from 'components/views/profile/profile-components';
+import {
+  currentUserSelector,
+  fetchUserProfile,
+  userProfileSelector,
+} from 'store';
 
 // This is the main profile page wrapper. It should determine
 // state, and display components appropriately.
-const Profile = () => (
-  <>
-    <Header />
-    <CenteredPage>
-      <Grid item xs={12} align="center">
-        <Typography variant="h2">PROFILE PAGE</Typography>
-      </Grid>
-      <Box mt={5}>
-        <Typography variant="h4">components go here</Typography>
-      </Box>
-    </CenteredPage>
-  </>
-);
+const Profile = () => {
+  const dispatch = useDispatch();
+  const { getAccessTokenSilently } = useAuth0();
+  // Grabs URL parameters.
+  const { profileId } = useParams();
+  // Get user profile and loading status
+  const {
+    hasErrors, userProfile,
+    isLoading: isUserProfileLoading
+  } = useSelector(userProfileSelector);
+  // Get current user's data from redux store.
+  const { currentUser } = useSelector(currentUserSelector);
+
+  // If there are URI parameters, fetch that user ID otherwise
+  // with no parameters we'll load the profile for the current
+  // logged in user.
+  useEffect(() => {
+    // We use async here to ensure that the access token is
+    // returned before we execute further logic; this prevents
+    // unwanted renderings of the 404 page.
+    const getUserProfile = async () => {
+      const token = await getAccessTokenSilently();
+      if (profileId) {
+        dispatch(fetchUserProfile({profileId,token}));
+      } else {
+        const { user_id } = currentUser
+        dispatch(fetchUserProfile({user_id, token}));
+      }
+    }
+    getUserProfile()
+  }, [dispatch, profileId, currentUser,
+      getAccessTokenSilently]);
+
+  return(
+    <>
+      <Header />
+      { isUserProfileLoading ?
+        <Loading />
+      : userProfile ?
+        <ProfileMain />
+      : hasErrors &&
+        <Error404 />
+      }
+    </>
+  );
+};
 
 export default Profile;
