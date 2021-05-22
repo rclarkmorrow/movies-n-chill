@@ -20,6 +20,8 @@ const Auth0ProviderWithHistory = ({ children }) => {
         redirectUri={window.location.origin}
         onRedirectCallback={onRedirectCallback}
         audience="MoviesNChill"
+        useRefreshTokens
+        cacheLocation="localstorage"
       >
         {children}
       </Auth0Provider>

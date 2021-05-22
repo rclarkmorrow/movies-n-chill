@@ -11,13 +11,13 @@ import axios from 'axios';
 // should return none if not (indicating that
 // the user still needs to go through the sign
 // up page and create their profile).
-const baseURI = "" // base URI goes here
+const baseURI = 'http://localhost:5000/current-user';
 
 // Set initial state values.
 const initialState= {
   isLoading: false,
   hasErrors: false,
-  currentUser: [],
+  currentUser: false,
 };
 
 // Define current user data slice.
@@ -26,7 +26,7 @@ const currentUserSlice = createSlice({
   initialState,
   reducers: {
     getCurrentUser: state => {
-      state.loading = true;
+      state.isLoading = true;
     },
     getCurrentUserSuccess: (state, {payload}) => {
       state.currentUser = payload;
@@ -58,11 +58,14 @@ export const fetchCurrentUser = (props) => {
   return async dispatch => {
     dispatch(getCurrentUser());
     try {
-      const { sub } = props;
+      const { sub, token } = props;
       const splitSub = sub.split('|');
       const auth0Id = encodeURIComponent(splitSub[1].trim());
-      const response = await axios.get(`${baseURI}${auth0Id}`);
-      dispatch(getCurrentUserSuccess(response.data.user));
+      const response = await axios.get(
+        `${baseURI}/${auth0Id}`,
+        {headers: {'Authorization' : `Bearer ${token}`}}
+      );
+      dispatch(getCurrentUserSuccess(response.data));
     } catch (error) {
       dispatch(getCurrentUserFailure());
     };

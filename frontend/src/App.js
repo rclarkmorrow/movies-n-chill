@@ -16,7 +16,7 @@ import { ProtectedRoute } from 'auth';
 
 const App = () => {
   // Get the current location.
-  const { pathname } =useLocation();
+  const { pathname } = useLocation();
 
   // Return the app routes.
   return (
@@ -28,8 +28,7 @@ const App = () => {
         <Route exact path="/" component={Home} />
         <ProtectedRoute path="/matches" component={Matches} />
         <ProtectedRoute path="/movies" component={Movies} />
-        <ProtectedRoute path="/profile" component={Profile} />
-        {/* update with 404 page component */}
+        <ProtectedRoute exact path="/profile/:profileId?" component={Profile} />
         <ProtectedRoute component={NotFound} />
       </Switch>
     </>

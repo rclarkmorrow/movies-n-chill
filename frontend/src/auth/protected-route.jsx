@@ -7,45 +7,66 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAuth0 } from "@auth0/auth0-react";
 
 // Local imports.
-import { Loading } from "../components";
+import { Header, Loading } from "../components";
 import { currentUserSelector, fetchCurrentUser } from "../store";
 
-const ProtectedRoute = ({ component: ComponentToRender, ...args }) => {
-
+const ProtectedRoute = ({ component: Component, ...rest }) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
-  const { isAuthenticated, isLoading, user } = useAuth0();
   const {
-    currentUser,
-    isLoading: isUserLoading
+    getAccessTokenSilently, user,
+    isAuthenticated, isLoading: isAuthLoading
+  } = useAuth0();
+  const {
+    hasErrors,isLoading: isCurrentUserLoading
   } = useSelector(currentUserSelector);
 
   useEffect(() => {
+    const storeCurrentUser = async() => {
       if (isAuthenticated) {
-        const { sub } = user
-        dispatch(fetchCurrentUser({ sub }));
+        const { sub } = user;
+        const token = await getAccessTokenSilently();
+        dispatch(fetchCurrentUser({sub, token}));
       }
+    }
+    storeCurrentUser();
+  }, [dispatch, getAccessTokenSilently,
+      isAuthenticated, user]);
 
-  }, [dispatch, isAuthenticated, user]);
-
-  // console.log(`Protected Route Current User: ${JSON.stringify(currentUser.userName)}`)
   return (
-    <Route {...args} render={(props=> {
-      return (
-        isLoading || isUserLoading ?
-          <Loading />
-        : !isAuthenticated ?
-          <Redirect to="/" />
-        // UNCOMMENT TO REDIRECT TO PROFILE PAGE WHEN SIGNUP FORM
-        // IS IMPLEMENTED -- THIS CATCHES USERS WHO HAVE REGISTERED
-        // THROUGH AUTH0, BUT WHO DO NOT HAVE NOT SET UP A PROFILE.
-        // : !currentUser && pathname !== "/signup" ?
-        //   <Redirect to="/signup" />
-        : <ComponentToRender />
-      )
-    })}></Route>
-  )
-}
+    <Route {...rest} render={props => {
+        return (
+          isCurrentUserLoading || isAuthLoading ?
+            <>
+              <Header />
+              <Loading />
+            </>
+          : hasErrors && pathname !== "/signup" ?
+            <Redirect to={
+              {
+                pathname: "/signup",
+                state: {
+                  from: props.location
+                }
+              }
+            } />
+          : isAuthenticated ?
+            <Component {...rest} {...props} />
+          // : !currentUser && pathname !== "/signup" ?
+          //   <Redirect to="/signup" />
+          :
+            <Redirect to={
+              {
+                pathname: "/",
+                state: {
+                  from: props.location
+                }
+              }
+            } />
+        )
+      }}
+    />
+  );
+};
 
-// Export the protected route.
 export default ProtectedRoute;

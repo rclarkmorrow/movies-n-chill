@@ -12,13 +12,13 @@ import axios from 'axios'
 // authenticated user to create or edit their
 // profile information.
 
-const baseURI = "" // Base API URI goes here.
+const baseURI = 'http://localhost:5000/users';
 
 // Set initial state values.
 const initialState= {
   isLoading: false,
   hasErrors: false,
-  userProfile: [],
+  userProfile: false,
 }
 
 // Define the search movie slice
@@ -27,10 +27,10 @@ const userProfileSlice = createSlice({
   initialState,
   reducers: {
     getUserProfile: state => {
-      state.loading = true;
+      state.isLoading = true;
     },
     getUserProfileSuccess: (state, {payload}) => {
-      state.userProfile = payload
+      state.userProfile = payload;
       state.isLoading = false;
       state.hasErrors = false;
     },
@@ -39,7 +39,7 @@ const userProfileSlice = createSlice({
         state.hasErrors = true;
     },
     patchUserProfile: state => {
-        state.loading = true;
+        state.isLoading = true;
     },
     patchUserProfileSuccess: state => {
       state.isLoading = false;
@@ -84,38 +84,39 @@ export default userProfileSlice.reducer;
 
 // Asynchronous thunk action (where the API call lives).
 export const fetchUserProfile = (props) => {
-    console.log(`start fetch user`)
   return async dispatch => {
     dispatch(getUserProfile());
     try {
-      const { profileId, userId } = props;
-      const useId = userId ? userId : profileId;
+      const { profileId, user_id, token } = props;
+      const useId = user_id ? user_id : profileId;
       const URIId = encodeURIComponent(useId);
-      const response = await axios.get(`${baseURI}/${URIId}`);
-      dispatch(getUserProfileSuccess(response.data.user));
+      const response = await axios.get(
+        `${baseURI}/${URIId}`,
+        {headers: {'Authorization' : `Bearer ${token}`}}
+      );
+      dispatch(getUserProfileSuccess(response.data));
     } catch (error) {
       dispatch(getUserProfileFailure());
-    }
-  }
-}
+    };
+  };
+};
 
 // Asynchronous thunk action (makes an API Post request)
 export const createUserProfile = (props) => {
   return async dispatch => {
     dispatch(postUserProfile());
     try {
-      const { token, ...otherProps } = props;
+      const { token, ...rest } = props;
       const request ={
         method: 'POST',
         headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(otherProps)
+        body: JSON.stringify(rest)
       };
       const response = await axios.post(`${baseURI}`, request);
-      console.log(`response ${response}`);
-      dispatch(postUserProfileSuccess());
+      dispatch(postUserProfileSuccess(response.data));
     } catch (error) {
       dispatch(postUserProfileFailure());
     };
@@ -127,18 +128,18 @@ export const editUserProfile = (props) => {
     return async dispatch => {
       dispatch(patchUserProfile());
       try {
-        const { token, ...otherProps } = props;
+        const { token, ...rest } = props;
         const request ={
           method: 'POST',
           headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify(otherProps)
+          body: JSON.stringify(rest)
         };
         const response = await axios.post(`${baseURI}`, request);
-        console.log(`response ${response}`);
-        dispatch(patchUserProfileSuccess());
+
+        dispatch(patchUserProfileSuccess(response.data));
       } catch (error) {
         dispatch(patchUserProfileFailure());
       };
