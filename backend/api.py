@@ -1,319 +1,257 @@
-""" --------------------------------------------------------------------------#
-# IMPORTS
-# --------------------------------------------------------------------------"""
-# Credit: https://hackersandslackers.com/flask-sqlalchemy-database-models/
-
 # Third party dependencies
+import datetime
+import json
+import sys
+from urllib.request import urlopen
 from flask import Flask, request, jsonify
-from Models import db, Movies, Users, Vaccines, Genders, Locations, SelectedMovies
-from flask import Flask
-
-app = Flask(__name__)
-app.secret_key = 'a secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MoviesNChill.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db.init_app(app)
+from flask_cors import CORS
+# from jose import jwt
+from Models import db, Movies, Users, SelectedMovies
 
 
-@app.route('/')
-def home():
-    return "Welcome to Movies and Chill"
+def create_app():
+    app = Flask(__name__)
+    app.secret_key = 'a secret'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MoviesNChill.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    db.init_app(app)
+
+    # Set up CORS. Allow '*' for origins.
+    CORS(app, resources={r"*": {"origins": "*"}})
+
+    # CORS Headers
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Headers',
+                             'Content-Type,Authorization,true')
+        response.headers.add('Access-Control-Allow-Methods',
+                             'GET, POST, PATCH, DELETE')
+        return response
+
+    @app.route('/')
+    def home():
+        return "Welcome to Movies and Chill"
+
+    # Get and post users.
+    @app.route('/users', methods=['GET', 'POST'])
+    def get_and_post_users():
+        # NOTE: Remove "GET" request for production
+        # version (we are not returning a list of users
+        # to the app)
+        if request.method == 'GET':
+            users = Users.query.all()
+            # Returned object is a list.
+            print(f'users is type {type(users)}')
+            # The items in the list are object of type User
+            for item in users:
+                print(f'type of item in list {type(item)}')
+                print(f'the item: {item}')
+                print(item.user_id)
+                print(item.user_name)
+                print(item.picture_url)
+                print(f'full {item.full()}')
+            return jsonify([user.full() for user in users]), 200
+
+        elif request.method == 'POST':
+            user = request.get_json()
+
+            # NOTE: Uncomment to prevent duplicate auth0_id entries
+            print("User auth0_id:" + user['auth0_id'])
+            if Users.query.filter_by(auth0_id=user['auth0_id']).first():
+                return jsonify('user already in database'), 402
+
+            print(f'new user: {user}')
+            usr = Users(user_name=user['user_name']
+                        , picture_url=user['picture_url']
+                        , phone_number=user['phone_number']
+                        , email_address=user['email_address']
+                        , auth0_id=user['auth0_id']
+                        , state=user['state']
+                        , city=user['city']
+                        , self_gender=user['self_gender']
+                        , seeking_gender=user['seeking_gender']
+                        , created_by='api post'
+                        )
+            usr.insert()
+
+            print('user[auth0_id]= ' + user['auth0_id'])
+            new_user = Users.query.filter_by(auth0_id=user['auth0_id']).first()
+            print("New user name: " + new_user.user_name)
+            print("New user id: " + str(new_user.user_id))
 
 
-# ------------------------------
-# GET All
-# ------------------------------
-@app.route('/users')
-def get_all_users():
-    users = Users.query.all()
-    # Returned object is a list.
-    print(f'users is type {type(users)}')
-    # The items in the list are object of type User
-    for item in users:
-        print(f'type of item in list {type(item)}')
-        print(f'the item: {item}')
-        print(item.user_id)
-        print(item.user_name)
-        print(item.picture_url)
-        print(f'full {item.full()}')
-    return jsonify([user.full() for user in users])
+            print(user['movies'])
+            if user['movies']:
+                for movie in user['movies']:
+                    # NOTE: Create a function to add movies to the
+                    # database if they are not already in it, and
+                    # create the SelectedMovies records for the
+                    # user.
 
+                    exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
+                    if exist:
+                        print("User exist")
+                        add_movie_to_user(new_user, exist)
+                    else:
+                        add_movie(new_user, movie)
 
-@app.route('/movies')
-def get_all_movies():
-    movies = Movies.query.all()
-    # Returned object is a list.
-    print(f'movie is type {type(movies)}')
-    # The items in the list are object of type User
-    for item in movies:
-        print(f'type of item in list {type(item)}')
-        print(f'the item: {item}')
-        print(item.movie_id)
-        print(item.movie_title)
-        print(f'full {item.full()}')
-    return jsonify([movie.full() for movie in movies])
+            return jsonify('added user'), 200
 
+    def add_movie(user, movie):
+        try:
+            # ------------------------------
+            # add movie to Movies table
+            # ------------------------------
+            print("user id:" + str(user.user_id))
+            print("user name:" + str(user.user_name))
+            print(movie)
 
-@app.route('/vaccines')
-def get_all_vaccines():
-    vaccines = Vaccines.query.all()
-    # Returned object is a list.
-    print(f'movie is type {type(vaccines)}')
-    # The items in the list are object of type User
-    for item in vaccines:
-        print(f'type of item in list {type(item)}')
-        print(f'the item: {item}')
-        print(item.vaccine_id)
-        print(item.description)
-        print(f'full {item.full()}')
-    return jsonify([vaccine.full() for vaccine in vaccines])
+            mv = Movies(tmdb_id=movie['tmdb_id']
+                        , movie_title=movie['movie_title']
+                        , url_movie_image=movie['url_movie_image']
+                        , genres=movie['genres']
+                        , rating=movie['rating']
+                        , year=movie['year']
+                        , created_by='app post'
+                        )
+            print("Try to insert new movie")
+            mv.insert()
+            print("Movie inserted")
+            # ------------------------------
+            # match movie and user
+            # ------------------------------
 
+            print(" ---- Match movie and user ----")
+            print("Match movie tmdb_id: " + movie['tmdb_id'])
+            print("Match user_id: " + str(user.user_id))
+            new_movie = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
+            add_movie_to_user(user,new_movie)
+            # smv = SelectedMovies(user_id=user.user_id, movie_id=new_movie.movie_id)
+            # smv.insert()
 
-@app.route('/genders')
-def get_all_genders():
-    genders = Genders.query.all()
-    # Returned object is a list.
-    print(f'genders is type {type(genders)}')
-    # The items in the list are object of type User
-    for item in genders:
-        print(f'type of item in list {type(item)}')
-        print(f'the item: {item}')
-        print(item.gender_id)
-        print(item.description)
-        print(item.other)
-        print(f'full {item.full()}')
-    return jsonify([gender.full() for gender in genders])
+        except:  # catch all exceptions
+            e = sys.exc_info()[0]
+            return jsonify('Error: {1}', e), 500
+        return jsonify('added movie'), 200
 
+    def add_movie_to_user(user, movie):
+        try:
+            smv = SelectedMovies(user_id=user.user_id, movie_id=movie.movie_id)
+            smv.insert()
+        except:  # catch all exceptions
+            e = sys.exc_info()[0]
+            return jsonify('Error: {1}', e), 500
+        return jsonify('added movie to the user'), 200
 
-@app.route('/locations')
-def get_all_locations():
-    locations = Locations.query.all()
-    # Returned object is a list.
-    print(f'Location is type {type(locations)}')
-    # The items in the list are object of type User
-    for item in locations:
-        print(f'type of item in list {type(item)}')
-        print(f'the item: {item}')
-        print(item.location_id)
-        print(item.state)
-        print(item.city)
-        print(f'full {item.full()}')
-    return jsonify([location.full() for location in locations])
+    # Get and post movies
+    @app.route('/movies', methods=['GET'])
+    def get_movies():
+        # NOTE: Remove for production
+        # version (we are not returning a list of movies
+        # to the app)
+        if request.method == 'GET':
+            movies = Movies.query.all()
+            # Returned object is a list.
+            print(f'movie is type {type(movies)}')
+            # The items in the list are object of type User
+            for item in movies:
+                print(f'type of item in list {type(item)}')
+                print(f'the item: {item}')
+                print(item.movie_id)
+                print(item.movie_title)
+                print(f'full {item.full()}')
+            return jsonify([movie.full() for movie in movies]), 200
 
+    @app.route('/movies/<mid>', methods=['PATCH', 'DELETE'])
+    def patch_delete_movies(mid):
+        # NOTE: Remove for production
+        # version (we are not returning a list of movies
+        # to the app)
+        if request.method == 'DELETE':
+            movie = Movies.query.filter_by(movie_id=mid).first_or_404 \
+                (description='There is no data with {}'.format(mid))
+            movie.delete()
+            return jsonify('movie deleted'), 200
+        if request.method == 'PATCH':
+            return jsonify('No edit movie feature'), 200
 
-@app.route('/selectedmovies')
-def get_all_selected_movies():
-    selectedmovies = SelectedMovies.query.all()
-    # Returned object is a list.
-    print(f'Movies is type {type(selectedmovies)}')
-    # The items in the list are object of type User
-    for item in selectedmovies:
-        print(f'type of item in list {type(item)}')
-        print(f'the item: {item}')
-        print(item.user_id)
-        print(item.movie_title)
-        print(f'full {item.full()}')
-    return jsonify([selectedmovie.full() for selectedmovie in selectedmovies])
+    # Get or patch user by ID.
+    @app.route('/users/<uid>', methods=['GET', 'PATCH', 'DELETE'])
+    def get_patch_or_delete_user(uid):
+        print(f'UID is: {uid}')
+        print(f'today: {datetime.date.today()}') # {datetime.date.today()}')
+        user = Users.query.filter_by(user_id=uid).first_or_404\
+                (description='There is no data with {}'.format(uid))
+        if request.method == 'GET':
+            # Returned object is a list.
+            print(f'usr is type {type(user)}')
+            # The items in the list are object of type User
+            return jsonify(user.with_movies())
+        elif request.method == 'PATCH':
+            req = request.get_json()
+            for key, value in req.items():
+                if key != 'movies':
+                    setattr(user, key, value)
+            user.modified_date = datetime.date.today()
+            user.modified_by = 'api patch'
+            if user.movies:
+                for movie in user.movies:
+                    # NOTE: Create a function to check
+                    # the new list of movies and delete
+                    # SelectedMovie relationships that
+                    # no longer exist, and create new ones.
+                    pass
 
-# ------------------------------
-# GET by passing ID
-# ------------------------------
+            user.update()
+            return jsonify('user updated'), 200
+        elif request.method == 'DELETE':
+            user.delete()
+            return jsonify('user deleted'), 200
 
-@app.route('/user/<uid>')
-def user(uid):
-    print(f'UID is: {uid}')
-    user = Users.query.filter_by(user_id=uid).first_or_404\
-        (description='There is no data with {}'.format(uid))
-    # Returned object is a list.
-    print(f'usr is type {type(user)}')
-    # The items in the list are object of type User
-    return jsonify(user.full())
+    @app.route('/auth0/<aid>', methods=['GET'])
+    def get_user_by_autho_id(aid):
+        print(f'AUID is: {aid}')
+        print(f'today: {datetime.date.today()}')  # {datetime.date.today()}')
+        user = Users.query.filter_by(auth0_id=aid).first_or_404 \
+            (description='There is no data with {}'.format(aid))
+        if request.method == 'GET':
+            # Returned object is a list.
+            print(f'usr is type {type(user)}')
+            # The items in the list are object of type User
+            return jsonify(user.with_movies())
+        else:
+            return jsonify('There is no data with {}'.format(aid)), 404
 
+    @app.route('/selectedmovies', methods=['GET'])
+    def get_data_in_selected_movie():
+        if request.method == 'GET':
+            selectedmoives = SelectedMovies.query.all()
+            # Returned object is a list.
+            print(f'Selectedmoives is type {type(selectedmoives)}')
+            # The items in the list are object of type User
+            for item in selectedmoives:
+                print(f'type of item in list {type(item)}')
+                print(f'the item: {item}')
+                print(item.user_id)
+                print(item.movie_id)
+                print(f'full {item.full()}')
+            return jsonify([selectedmoive.full() for selectedmoive in selectedmoives]), 200
+        else:
+            return jsonify('There is no data found'.format()), 404
 
-@app.route('/movie/<mid>')
-def movie(mid):
-    print(f'MID is: {mid}')
-    movie = Movies.query.filter_by(movie_id=mid).first_or_404\
-        (description='There is no data with {}'.format(mid))
-    # Returned object is a list.
-    print(f'movie is type {type(movie)}')
-    # The items in the list are object of type User
-    return jsonify(movie.full())
+    # Get or patch user by ID.
+    @app.route('/users/<uid>/matches', methods=['GET'])
+    def get_user_matches(uid):
+        # NOTE: matching algorithm should be base on the passed
+        # in user ID's movie list matching with other users
+        # somehow.
 
+        return jsonify(f'matches for user {uid}'), 200
 
-@app.route('/vaccine/<vid>')
-def vaccine(vid):
-    print(f'VID is: {vid}')
-    vaccine = Vaccines.query.filter_by(vaccine_id=vid).first_or_404\
-        (description='There is no data with {}'.format(vid))
-    # Returned object is a list.
-    print(f'vaccine is type {type(vaccine)}')
-    # The items in the list are object of type User
-    return jsonify(vaccine.full())
-
-
-@app.route('/gender/<gid>')
-def gender(gid):
-    print(f'GID is: {gid}')
-    gender = Genders.query.filter_by(gender_id=gid).first_or_404\
-        (description='There is no data with {}'.format(gid))
-    # Returned object is a list.
-    print(f'gender is type {type(gender)}')
-    # The items in the list are object of type User
-    return jsonify(gender.full())
-
-
-@app.route('/location/<lid>')
-def location(lid):
-    print(f'LID is: {lid}')
-    # location = Locations.query.get(lid)
-    location = Locations.query.filter_by(location_id=lid).first_or_404\
-        (description='There is no data with {}'.format(lid))
-    # Returned object is a list.
-    print(f'location is type {type(location)}')
-    # The items in the list are object of type User
-    return jsonify(location.full())
-
-
-@app.route('/selectedmovie/<smid>')
-def selected_movie(smid):
-    print(f'SMID is: {smid}')
-    # location = Locations.query.get(lid)
-    movies = SelectedMovies.query.filter_by(selectedmovie_id=smid).first_or_404\
-        (description='There is no data with {}'.format(smid))
-    # Returned object is a list.
-    print(f'Selected movies is type {type(movies)}')
-    # The items in the list are object of type User
-    return jsonify(movies.full())
-
-
-# ------------------------------
-# POST GET and DELETE
-# ------------------------------
-@app.route('/locations/<lid>', methods=['POST', 'GET', 'DELETE'])
-def view_or_manage_location(lid):
-    if request.method == "POST":
-        location = request.get_json()
-        print('movie', location)
-
-        location_id = location["location_id"]
-        state = location["state"]
-        city = location["city"]
-
-        lc = Locations(state, city)
-
-        db.session.add(lc)
-        db.session.commit()
-
-    if request.method == "DELETE":
-        location = request.get_json()
-        Locations.query.filter(Locations.location_id == lid).delete()
-        db.session.commit()
-
-    return ""
-
-
-@app.route('/selectedmovies/<smid>', methods=['POST', 'GET', 'DELETE'])
-def view_or_manage_selected_movies(smid):
-    if request.method == "POST":
-        selectedmovie = request.get_json()
-        print('selected movie', selectedmovie)
-
-        user_id = selectedmovie["user_id"]
-        movie_title = selectedmovie["movie_title"]
-        tmdb_id = selectedmovie['tmdb_id']
-        url_movie_image = selectedmovie['url_movie_image']
-
-        sm = SelectedMovies(user_id
-                            , movie_title
-                            , tmdb_id
-                            , url_movie_image)
-
-        db.session.add(sm)
-        db.session.commit()
-
-    if request.method == "DELETE":
-        selectedmovie = request.get_json()
-        SelectedMovies.query.filter(SelectedMovies.selectedmovie_id == smid).delete()
-        db.session.commit()
-
-    return ""
-
-
-@app.route('/movies/<mid>', methods=['POST', 'GET', 'DELETE'])
-def view_or_manage_movie(mid):
-
-    if request.method == "POST":
-        movie = request.get_json()
-        print('movie', movie)
-
-        movie_id = movie["movie_id"]
-        movie_title = movie["movie_title"]
-        tmdb_id = movie["tmdb_id"]
-        url_movie_image = movie["url_movie_image"]
-        rating = movie["rating"]
-        year = movie["year"]
-
-        mv = Movies(movie_title
-                    , tmdb_id
-                    , url_movie_image
-                    , rating
-                    , year
-                    )
-        db.session.add(mv)
-        db.session.commit()
-    if request.method == "DELETE":
-        movie_title = request.get_json()
-        Movies.query.filter(Movies.movie_id == mid).delete()
-        db.session.commit()
-
-    return ""
-
-
-@app.route('/users/<uid>', methods=['POST', 'GET', 'DELETE'])
-def view_or_manage_user(uid):
-    # Get response data.
-    if request.method == "POST":
-
-        user = request.get_json()
-        print('user', user)
-
-        user_id = user["user_id"]
-        user_name = user["user_name"]
-        picture_url = user["picture_url"]
-        phone_number = user["phone_number"]
-        email_address = user["email_address"]
-        auth0_user_id = user["auth0_user_id"]
-        state = user["state"]
-        city = user["city"]
-        self_gender = user['self_gender']
-        seeking_gender = user['seeking_gender']
-        vaccine = user['vaccine']
-
-        usr = Users(user_name
-                    , picture_url
-                    , phone_number
-                    , email_address
-                    , auth0_user_id
-                    , state
-                    , city
-                    , self_gender
-                    , seeking_gender
-                    , vaccine
-                    , user_id
-                    )
-
-        db.session.add(usr)
-        db.session.commit()
-
-    if request.method == "DELETE":
-        user_name = request.get_json()
-        Users.query.filter(Users.user_id == uid).delete()
-        db.session.commit()
-
-    return ""
+    return app
 
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True, host='0.0.0.0', port=5000)
