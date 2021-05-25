@@ -115,6 +115,7 @@ class Users(BaseModel, db.Model):
                     , 'genres': movie.movies.genres
                     , 'rating': movie.movies.rating
                     , 'year': movie.movies.year
+                    , 'tmdb_id': movie.movies.tmdb_id
                 } for movie in self.movies]
         }
 
@@ -213,10 +214,10 @@ class SelectedMovies(BaseModel, db.Model):
         self.user_id = int(user_id)
         self.movie_id = int(movie_id)
         # self.is_active = True
-        self.created_by = created_by
-        self.created_date = datetime.date.today()
-        self.modified_by = created_by
-        self.modified_date = datetime.date.today()
+        # self.created_by = created_by
+        # self.created_date = datetime.date.today()
+        # self.modified_by = created_by
+        # self.modified_date = datetime.date.today()
 
     # Return full details.
     def full(self):
