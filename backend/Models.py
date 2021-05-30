@@ -119,6 +119,20 @@ class Users(BaseModel, db.Model):
                 } for movie in self.movies]
         }
 
+    # Return full details.
+    def full_for_matches(self):
+        return {
+            'user_id': self.user_id
+            , 'user_name': self.user_name
+            , 'picture_URL': self.picture_url
+            , 'phone_number': self.phone_number
+            , 'email_address': self.email_address
+            , 'state': self.state
+            , 'city': self.city
+            , 'self_gender': self.self_gender
+            , 'seeking_gender': self.seeking_gender
+        }
+
 
 class Movies(BaseModel, db.Model):
 
@@ -153,6 +167,7 @@ class Movies(BaseModel, db.Model):
                  , rating=None
                  , year=None
                  , created_by=None
+                 , modified_by=None
                  ):
 
         self.movie_title = movie_title
@@ -164,7 +179,7 @@ class Movies(BaseModel, db.Model):
         # self.is_active = True
         self.created_by = created_by
         self.created_date = datetime.date.today()
-        self.modified_by = created_by
+        self.modified_by = modified_by
         self.modified_date = datetime.date.today()
 
     # Return full details.
