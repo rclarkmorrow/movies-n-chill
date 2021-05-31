@@ -11,8 +11,10 @@ import Movies from 'components/views/movies';
 import NotFound from 'components/theme/not-found';
 import { Error404 } from 'components/theme/not-found';
 import Profile from 'components/views/profile';
+import UserProfileForm from 'components/forms/user-profile';
+
 export {
   CenteredPage, Header, Home, Loading,
   Matches, Movies, NotFound, Error404,
-  Profile,
+  Profile, UserProfileForm,
 };

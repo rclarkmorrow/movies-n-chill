@@ -10,11 +10,9 @@ import useStyles from 'components/views/profile/styles';
 import { userProfileSelector } from 'store';
 
 const UserPicture = () => {
-  console.log('user picture loads')
   const classes = useStyles();
   const { userProfile } = useSelector(userProfileSelector);
   const { user_name, picture_url} = userProfile
-  console.log(`${user_name}, ${picture_url}`)
 
   return(
     <Box pt={5} pl={4}>
