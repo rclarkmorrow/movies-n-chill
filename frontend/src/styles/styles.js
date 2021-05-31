@@ -16,7 +16,12 @@ let theme = createMuiTheme({
     secondary: {
       main: '#008AB8'
     },
-    background: '#FFE6FF',
+    background: {
+      default: '#FFE6FF',
+    },
+    warning: {
+      main: '#923d87',
+    },
   },
 });
 
@@ -27,7 +32,7 @@ const useStyle = makeStyles(() => ({
   root: {
     width: '100%',
     minHeight: '100vh',
-    backgroundColor: theme.palette.background,
+    backgroundColor: theme.palette.background.default,
     color: theme.palette.text.primary,
   },
 }));

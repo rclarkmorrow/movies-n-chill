@@ -3,26 +3,26 @@
 // External package dependencies.
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { Box, Button } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 
 // Local imports
-import { currentUserSelector } from 'store';
+import { PROFILE_TEXT } from 'components/views/profile/styles';
 
 const UserEditButton = () => {
   const history = useHistory();
-  const { currentUser } = useSelector(currentUserSelector);
+  const { EDIT_BUTTON_TEXT, EDIT_BUTTON_URL } = PROFILE_TEXT;
 
   return(
     <Box pl={10}>
       <Button
+        color="primary"
         startIcon={<Create />}
         onClick={() =>
           history
-          .push(`/edit-profile/${currentUser.user_id}`)}
+          .push(`${EDIT_BUTTON_URL}`)}
       >
-        EDIT
+        {EDIT_BUTTON_TEXT}
       </Button>
     </Box>
   );

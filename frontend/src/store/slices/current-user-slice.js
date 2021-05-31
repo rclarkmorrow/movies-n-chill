@@ -11,7 +11,8 @@ import axios from 'axios';
 // should return none if not (indicating that
 // the user still needs to go through the sign
 // up page and create their profile).
-const baseURI = 'http://localhost:5000/current-user';
+const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/auth0';
+// const baseURI = 'http://localhost:5000/current-user';
 
 // Set initial state values.
 const initialState= {
@@ -59,8 +60,9 @@ export const fetchCurrentUser = (props) => {
     dispatch(getCurrentUser());
     try {
       const { sub, token } = props;
-      const splitSub = sub.split('|');
-      const auth0Id = encodeURIComponent(splitSub[1].trim());
+      // const splitSub = sub.split('|');
+      // const auth0Id = encodeURIComponent(splitSub[1].trim());
+      const auth0Id = encodeURIComponent(sub.split('|')[1].trim());
       const response = await axios.get(
         `${baseURI}/${auth0Id}`,
         {headers: {'Authorization' : `Bearer ${token}`}}

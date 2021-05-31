@@ -7,13 +7,14 @@ import { Button } from '@material-ui/core';
 import { Create } from '@material-ui/icons/';
 
 // Local imports.
-import useStyles, { BTN_SIGN_UP } from 'components/views/home/styles';
+import useStyles, { BUTTON_SETTINGS } from 'components/views/home/styles';
 
 // Create the homepage sign up button.
 const HomeSignUpButton = () => {
   // Setup the login action.
   const { loginWithRedirect } =useAuth0();
   const classes = useStyles();
+  const { BTN_SIGN_UP } = BUTTON_SETTINGS;
 
   // Define the login button and return it with
   // the login action.

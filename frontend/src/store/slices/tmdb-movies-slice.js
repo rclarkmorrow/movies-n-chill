@@ -63,7 +63,9 @@ export const fetchTMDBMovies = (props) => {
   return async dispatch => {
     dispatch(getTMDBMovies());
     try {
-      const { search, page } = props;
+      const {
+        movieSearch:  search, movieSearchPage: page
+      } = props;
       const searchURI = encodeURIComponent(search.trim());
       const queryURI = `&query=${searchURI}&page=${page}`;
       const response = await axios.get(`${partialURI}${queryURI}`);

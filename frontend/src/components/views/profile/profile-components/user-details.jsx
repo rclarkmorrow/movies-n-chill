@@ -3,14 +3,15 @@
 // External package dependencies.
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Grid, Link, Typography } from '@material-ui/core';
 import { Email, Phone } from '@material-ui/icons';
 
 // Local imports.
 import { userProfileSelector } from 'store';
+import { PROFILE_TEXT } from 'components/views/profile/styles';
 
 const UserDetails = () => {
-
+  const { GENDER_LABEL, SEEKING_LABEL } = PROFILE_TEXT
   const { userProfile } = useSelector(userProfileSelector);
   const {
       city, email_address, self_gender, phone_number,
@@ -19,38 +20,46 @@ const UserDetails = () => {
 
   return(
     <Box pt={7} pl={4}>
-      <Typography variant="h4">
+      <Typography variant="h3">
         {user_name}
       </Typography>
-      <Typography>
+      <Typography variant="h5">
         {city}, {state}
       </Typography>
-      <Grid container spacing={1}>
-        <Grid item>
-            <Email />
+      <Link
+        href={`mailto:${email_address}`}
+      >
+        <Grid container spacing={1}>
+          <Grid item>
+              <Email fontSize="small"/>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2">
+                {email_address}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Typography>
-            {email_address}
-          </Typography>
+      </Link>
+      <Link
+        href={`tel:${phone_number}`}
+      >
+        <Grid container spacing={1}>
+          <Grid item>
+            <Phone fontSize="small"/>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2">
+              {phone_number}
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={1}>
-        <Grid item>
-          <Phone />
-        </Grid>
-        <Grid item>
-          <Typography>
-            {phone_number}
-          </Typography>
-        </Grid>
-      </Grid>
+      </Link>
       <Box pt={3}>
         <Typography variant="h6">
-          Gender: {self_gender}
+          {GENDER_LABEL}{self_gender}
         </Typography>
         <Typography variant="h6">
-          Seeking: {seeking_gender}
+          {SEEKING_LABEL}{seeking_gender}
         </Typography>
       </Box>
     </Box>

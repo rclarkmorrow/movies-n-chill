@@ -10,10 +10,11 @@ import {
 
 // Local imports.
 import { userProfileSelector } from 'store';
-import useStyles from 'components/views/profile/styles';
+import useStyles, { PROFILE_TEXT } from 'components/views/profile/styles';
 
 const UserMovies = (props) => {
   const classes = useStyles();
+  const { MOVIE_LIST_TITLE } = PROFILE_TEXT;
   const { userProfile } = useSelector(userProfileSelector);
   const { movies } = userProfile;
 
@@ -22,14 +23,14 @@ const UserMovies = (props) => {
     <Grid item xs={12} align="center">
         <Box mt={5} mb={5}>
         <Typography variant="h4">
-            Movies
+          {MOVIE_LIST_TITLE}
         </Typography>
         </Box>
     </Grid>
     <Grid item xs={1} />
     <Grid item xs={10} align="center">
     <div className={classes.root} style={{marginBottom: '50px'}}>
-    <GridList cols={2.5} className={classes.gridList} cellHeight='auto'>
+    <GridList cols={2.5} className={classes.gridList} cellHeight={450}>
       { movies.map((movie) => (
         <GridListTile key={movie.url_movie_image}>
           <img src={movie.url_movie_image} alt={movie.movie_title}/>

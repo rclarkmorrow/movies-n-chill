@@ -1,4 +1,4 @@
-// ./src/components/vies/profile/styles/styles.js
+// ./src/components/views/profile/styles/styles.js
 
 // External package dependencies.
 import { makeStyles }from '@material-ui/core/styles';

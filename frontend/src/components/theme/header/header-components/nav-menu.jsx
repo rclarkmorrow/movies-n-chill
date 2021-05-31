@@ -1,10 +1,10 @@
 // ./src/components/theme/header/headercomponents/nav-menu.jsx
 
 // External package imports.
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
-import { Home, PeopleAlt, Person, Theaters } from '@material-ui/icons';
+import { PeopleAlt, Person, Theaters } from '@material-ui/icons';
 import ReactTooltip from 'react-tooltip';
 
 // Local imports.
@@ -15,7 +15,7 @@ const NavMenu = () => {
   const classes = useStyles();
   const history = useHistory();
   return(
-    <Fragment>
+    <>
       <ReactTooltip
         place="bottom"
         effect="solid"
@@ -45,15 +45,7 @@ const NavMenu = () => {
       >
         <PeopleAlt data-tip="Matches" className={classes.navIconStyle} />
       </IconButton>
-      <IconButton
-        edge="start"
-        color="inherit"
-        aria-label="home"
-        onClick={() => history.push("/")}
-      >
-        <Home data-tip="Home" className={classes.navIconStyle} />
-      </IconButton>
-    </Fragment>
+    </>
   )
 }
 
