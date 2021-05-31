@@ -41,7 +41,7 @@ const Profile = () => {
       const token = await getAccessTokenSilently();
       if (profileId) {
         dispatch(fetchUserProfile({profileId,token}));
-      } else {
+      } else if (currentUser) {
         const { user_id } = currentUser
         dispatch(fetchUserProfile({user_id, token}));
       }
@@ -57,7 +57,7 @@ const Profile = () => {
         <Loading />
       : userProfile ?
         <ProfileMain />
-      : hasErrors &&
+      :  hasErrors &&
         <Error404 />
       }
     </>

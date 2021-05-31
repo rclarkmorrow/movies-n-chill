@@ -4,18 +4,22 @@
 import React from 'react';
 
 // Local imports.
-import {
-    LOGO_ALT_TEXT, LOGO_FILE, LOGO_SIZE,
-} from 'components/views/home/styles';
+import { LOGO_SETTINGS } from 'components/views/home/styles';
 
 // Create logo for the homepage.
-const HomeLogo = () => (
+const HomeLogo = () => {
+  const {
+    LOGO_ALT_TEXT, LOGO_FILE, LOGO_SIZE,
+  } = LOGO_SETTINGS;
+
+  return (
     <img
       src={LOGO_FILE}
       alt={LOGO_ALT_TEXT}
       width={LOGO_SIZE}
       height={LOGO_SIZE}
     ></img>
-);
+  );
+};
 
 export default HomeLogo;

@@ -12,13 +12,14 @@ import axios from 'axios'
 // authenticated user to create or edit their
 // profile information.
 
-const baseURI = 'http://localhost:5000/users';
-
+const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/users';
+// const baseURI = 'http://localhost:5000/users';
 // Set initial state values.
 const initialState= {
   isLoading: false,
   hasErrors: false,
   userProfile: false,
+  error: false,
 }
 
 // Define the search movie slice
@@ -34,9 +35,10 @@ const userProfileSlice = createSlice({
       state.isLoading = false;
       state.hasErrors = false;
     },
-    getUserProfileFailure: state => {
+    getUserProfileFailure: (state, {payload}) => {
         state.isLoading = false;
         state.hasErrors = true;
+        state.error = payload;
     },
     patchUserProfile: state => {
         state.isLoading = true;
@@ -59,7 +61,7 @@ const userProfileSlice = createSlice({
     postUserProfileFailure: state => {
       state.isLoading = false;
       state.hasErrors = true;
-    }
+    },
   },
 });
 
@@ -73,7 +75,7 @@ export const {
   patchUserProfileFailure,
   postUserProfile,
   postUserProfileSuccess,
-  postUserProfileFailure
+  postUserProfileFailure,
 } = userProfileSlice.actions;
 
 // Export the selector.
@@ -96,7 +98,7 @@ export const fetchUserProfile = (props) => {
       );
       dispatch(getUserProfileSuccess(response.data));
     } catch (error) {
-      dispatch(getUserProfileFailure());
+      dispatch(getUserProfileFailure(error));
     };
   };
 };
@@ -104,18 +106,17 @@ export const fetchUserProfile = (props) => {
 // Asynchronous thunk action (makes an API Post request)
 export const createUserProfile = (props) => {
   return async dispatch => {
-    dispatch(postUserProfile());
+    dispatch(postUserProfile(props));
     try {
-      const { token, ...rest } = props;
-      const request ={
+      const { token, values } = props;
+      const withHeaders ={
         method: 'POST',
         headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(rest)
       };
-      const response = await axios.post(`${baseURI}`, request);
+      const response = await axios.post(`${baseURI}`, values, withHeaders);
       dispatch(postUserProfileSuccess(response.data));
     } catch (error) {
       dispatch(postUserProfileFailure());
@@ -128,16 +129,15 @@ export const editUserProfile = (props) => {
     return async dispatch => {
       dispatch(patchUserProfile());
       try {
-        const { token, ...rest } = props;
-        const request ={
-          method: 'POST',
+        const { token, values, user_id } = props;
+        const withHeaders ={
+          method: 'PATCH',
           headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify(rest)
         };
-        const response = await axios.post(`${baseURI}`, request);
+        const response = await axios.patch(`${baseURI}/${user_id}`, values, withHeaders);
 
         dispatch(patchUserProfileSuccess(response.data));
       } catch (error) {
