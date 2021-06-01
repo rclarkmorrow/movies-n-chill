@@ -11,8 +11,8 @@ import axios from 'axios';
 // should return none if not (indicating that
 // the user still needs to go through the sign
 // up page and create their profile).
-const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/auth0';
-// const baseURI = 'http://localhost:5000/current-user';
+// const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/auth0';
+const baseURI = '/api/auth0'
 
 // Set initial state values.
 const initialState= {
