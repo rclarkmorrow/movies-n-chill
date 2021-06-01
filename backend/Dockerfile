@@ -1,8 +1,8 @@
-FROM python:3.8-slim-buster
-WORKDIR /app
+FROM python:3.9-slim-buster
+
+WORKDIR /usr/src/app
+
+COPY requirements.txt .
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install -r requirements.txt
 COPY . .
-RUN pip3 install Flask
-RUN pip3 install flask_sqlalchemy
-RUN pip3 install sqlalchemy
-RUN pip3 install flask-cors
-CMD ["python3", "api.py"]

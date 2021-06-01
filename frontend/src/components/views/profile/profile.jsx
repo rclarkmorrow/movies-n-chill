@@ -8,7 +8,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 // Local imports.
 import { Error404, Header, Loading } from 'components';
-import { ProfileMain } from 'components/views/profile/profile-components';
+import { Main } from 'components/views/profile/components';
 import {
   currentUserSelector,
   fetchUserProfile,
@@ -41,7 +41,7 @@ const Profile = () => {
       const token = await getAccessTokenSilently();
       if (profileId) {
         dispatch(fetchUserProfile({profileId,token}));
-      } else {
+      } else if (currentUser) {
         const { user_id } = currentUser
         dispatch(fetchUserProfile({user_id, token}));
       }
@@ -56,8 +56,8 @@ const Profile = () => {
       { isUserProfileLoading ?
         <Loading />
       : userProfile ?
-        <ProfileMain />
-      : hasErrors &&
+        <Main />
+      :  hasErrors &&
         <Error404 />
       }
     </>

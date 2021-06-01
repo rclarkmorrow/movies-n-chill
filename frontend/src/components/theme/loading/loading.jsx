@@ -10,7 +10,7 @@ const loadingImage=`${process.env.PUBLIC_URL}/loading.svg`;
 const Loading = () => (
     // Use Grid and Grid item to center the spinning
     // icon on the loading page.
-    <div>
+    <>
       <Grid
         container
         direction="column"
@@ -22,7 +22,7 @@ const Loading = () => (
           <img src={loadingImage} alt="Loading" />
         </Grid>
       </Grid>
-    </div>
+    </>
 );
 
 export default Loading;
