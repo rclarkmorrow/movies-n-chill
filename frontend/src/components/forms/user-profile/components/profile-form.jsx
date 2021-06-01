@@ -14,7 +14,7 @@ import {
 // Local imports.
 import { currentUserSelector } from 'store';
 import { Error404 } from 'components';
-import { FORM_SETTINGS } from 'components/forms/user-profile/styles';
+import { FORM_SETTINGS } from 'components/forms/user-profile/settings';
 import { validationSchema } from 'components/forms/user-profile/form-model';
 import {
   DetailsForm, MovieSearchForm, StepperWrapper,

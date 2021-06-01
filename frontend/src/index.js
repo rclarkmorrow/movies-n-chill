@@ -17,9 +17,11 @@ ReactDOM.render(
     <StrictMode>
       <Provider store={store}>
         <Auth0ProviderWithHistory>
-          <ThemeWrapper>
-            <App />
-          </ThemeWrapper>
+          {/* <StyleProvider> */}
+            <ThemeWrapper>
+              <App />
+            </ThemeWrapper>
+          {/* </StyleProvider> */}
         </Auth0ProviderWithHistory>
       </Provider>
     </StrictMode>

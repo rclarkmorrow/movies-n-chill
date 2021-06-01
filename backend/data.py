@@ -1,13 +1,12 @@
 # Local application dependencies
 from Models import db, Movies, Users, SelectedMovies
-from api import create_app
+from app import app
 
 
 # Build an app context from the app to run the database initialization.
 # NOTE: Drop all first to clear database of all data, create all creates
 #       empty tables to populate, at the end we close the db session.
 def initialize_db():
-    app = create_app()
     app.app_context().push()
     db.drop_all()
     db.create_all()

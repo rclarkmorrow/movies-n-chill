@@ -8,7 +8,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 // Local imports.
 import { Error404, Header, Loading } from 'components';
-import { ProfileMain } from 'components/views/profile/profile-components';
+import { Main } from 'components/views/profile/components';
 import {
   currentUserSelector,
   fetchUserProfile,
@@ -56,7 +56,7 @@ const Profile = () => {
       { isUserProfileLoading ?
         <Loading />
       : userProfile ?
-        <ProfileMain />
+        <Main />
       :  hasErrors &&
         <Error404 />
       }
