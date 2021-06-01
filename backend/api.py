@@ -1,8 +1,8 @@
 # Third party dependencies
 import datetime
-import json
+# import json
 import sys
-from urllib.request import urlopen
+# from urllib.request import urlopen
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 # from jose import jwt
@@ -34,6 +34,38 @@ def create_app():
     def home():
         return "Welcome to Movies and Chill"
 
+    # Get and post movies
+    @app.route('/movies', methods=['GET'])
+    def get_movies():
+        # NOTE: Remove for production
+        # version (we are not returning a list of movies
+        # to the app)
+        if request.method == 'GET':
+            movies = Movies.query.all()
+            # Returned object is a list.
+            print(f'movie is type {type(movies)}')
+            # The items in the list are object of type User
+            for item in movies:
+                print(f'type of item in list {type(item)}')
+                print(f'the item: {item}')
+                print(item.movie_id)
+                print(item.movie_title)
+                print(f'full {item.full()}')
+            return jsonify([movie.full() for movie in movies]), 200
+
+    @app.route('/movies/<mid>', methods=['PATCH', 'DELETE'])
+    def patch_delete_movies(mid):
+        # NOTE: Remove for production
+        # version (we are not returning a list of movies
+        # to the app)
+        if request.method == 'DELETE':
+            movie = Movies.query.filter_by(movie_id=mid).first_or_404 \
+                (description='There is no data with {}'.format(mid))
+            movie.delete()
+            return jsonify('movie deleted'), 200
+        if request.method == 'PATCH':
+            return jsonify('No edit movie feature'), 200
+
     # Get and post users.
     @app.route('/users', methods=['GET', 'POST'])
     def get_and_post_users():
@@ -54,7 +86,7 @@ def create_app():
                 print(f'full {item.full()}')
             return jsonify([user.full() for user in users]), 200
 
-        elif request.method == 'POST':
+        elif request.method == 'POST':  # Add a new user with movies
             user = request.get_json()
 
             # NOTE: Uncomment to prevent duplicate auth0_id entries
@@ -91,7 +123,7 @@ def create_app():
 
                     exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
                     if exist:
-                        print("User exist")
+                        print("Movie exist")
                         add_movie_to_user(new_user, exist)
                     else:
                         add_movie(new_user, movie)
@@ -119,7 +151,7 @@ def create_app():
             mv.insert()
             print("Movie inserted")
             # ------------------------------
-            # match movie and user
+            # match movie with the user
             # ------------------------------
 
             print(" ---- Match movie and user ----")
@@ -133,7 +165,7 @@ def create_app():
         except:  # catch all exceptions
             e = sys.exc_info()[0]
             return jsonify('Error: {1}', e), 500
-        return jsonify('added movie'), 200
+        return jsonify('Added movie'), 200
 
     def add_movie_to_user(user, movie):
         try:
@@ -142,39 +174,32 @@ def create_app():
         except:  # catch all exceptions
             e = sys.exc_info()[0]
             return jsonify('Error: {1}', e), 500
-        return jsonify('added movie to the user'), 200
+        return jsonify('Added the movie to user'), 200
 
-    # Get and post movies
-    @app.route('/movies', methods=['GET'])
-    def get_movies():
-        # NOTE: Remove for production
-        # version (we are not returning a list of movies
-        # to the app)
-        if request.method == 'GET':
-            movies = Movies.query.all()
-            # Returned object is a list.
-            print(f'movie is type {type(movies)}')
-            # The items in the list are object of type User
-            for item in movies:
-                print(f'type of item in list {type(item)}')
-                print(f'the item: {item}')
-                print(item.movie_id)
-                print(item.movie_title)
-                print(f'full {item.full()}')
-            return jsonify([movie.full() for movie in movies]), 200
+    # def delete_movie_from_user(user, movie):
+    #     try:
+    #         print("--- Delete User and Movies mapping ----")
+    #         smv = SelectedMovies.query.filter_by(user_id=user.user_id, movie_id=movie.movie_id).first()
+    #         smv.delete()
+    #
+    #     except:  # catch all exceptions
+    #         e = sys.exc_info()[0]
+    #         return jsonify('Error: {1}', e), 500
+    #     return jsonify('Removed the movie from user'), 200
 
-    @app.route('/movies/<mid>', methods=['PATCH', 'DELETE'])
-    def patch_delete_movies(mid):
-        # NOTE: Remove for production
-        # version (we are not returning a list of movies
-        # to the app)
-        if request.method == 'DELETE':
-            movie = Movies.query.filter_by(movie_id=mid).first_or_404 \
-                (description='There is no data with {}'.format(mid))
-            movie.delete()
-            return jsonify('movie deleted'), 200
-        if request.method == 'PATCH':
-            return jsonify('No edit movie feature'), 200
+    def delete_existing_movie_from_user(user):
+        try:
+            print("--- Delete User and Movies mapping ----")
+            while True:
+                exist = SelectedMovies.query.filter_by(user_id=user.user_id).first()
+                if exist:
+                    smv = SelectedMovies.query.filter_by(user_id=exist.user_id, movie_id=exist.movie_id).first()
+                    smv.delete()
+                else:
+                    return jsonify('Removed the movie from user'), 200
+        except:  # catch all exceptions
+            e = sys.exc_info()[0]
+            return jsonify('Error: {1}', e), 500
 
     # Get or patch user by ID.
     @app.route('/users/<uid>', methods=['GET', 'PATCH', 'DELETE'])
@@ -189,27 +214,37 @@ def create_app():
             print(f'usr is type {type(user)}')
             # The items in the list are object of type User
             return jsonify(user.with_movies())
-        elif request.method == 'PATCH':
+
+        elif request.method == 'PATCH':  # Update a user with movies
             print("----- Edit -------")
             req = request.get_json()
             for key, value in req.items():
                 if key != 'movies':
                     setattr(user, key, value)
-            user['modified_by'] = 'api patch'
+            user.modified_by = 'api patch'
 
-            print("Edit user_id: " + str(user['user_id']))
-            selected_movies = [SelectedMovies.query.filter_by(user_id=user['user_id'])]
-            print(selected_movies)
-            if user['movies']:
-                for movie in user['movies']:
-                    # NOTE: Create a function to check
-                    # the new list of movies and delete
-                    # SelectedMovie relationships that
-                    # no longer exist, and create new ones.
-                    pass
+            print("Edit user_id: " + str(user.user_id))
 
-            # user.update()
+            if user.movies:
+                # for movie in user.movies:
+                #     delete_movie_from_user(user, movie)
+                #     print("Movie: " + str(movie.movie_id))
+
+                delete_existing_movie_from_user(user)
+                for movie in user.movies:
+                    print("---- Add new movies for the user ----")
+                    print("TMDB ID: " + str(movie.tmdb_id))
+                    exist = Movies.query.filter_by(tmdb_id=movie.tmdb_id).first()
+                    if exist:
+                        print("Movie exist")
+                        add_movie_to_user(user, exist)
+                    else:
+                        print("add new movie and map with the user")
+                        add_movie(user, movie)
+
+            user.update()
             return jsonify('user updated'), 200
+
         elif request.method == 'DELETE':
             user.delete()
             return jsonify('user deleted'), 200
@@ -251,21 +286,25 @@ def create_app():
         # NOTE: matching algorithm should be base on the passed
         # in user ID's movie list matching with other users
         # somehow.
+        try:
+            matching_users, matching_percentage = Profiles.get_matching_users(uid)
+            print('matching_user', matching_users)
 
-        matching_users, matching_percentage = Profiles.get_matching_users(uid)
-        print('matching_user', matching_users)
+            musers = []
+            for usr in matching_users:
+                musers.append(Users.query.filter_by(user_id=usr).first())
 
-        musers = []
-        for usr in matching_users:
-            musers.append(Users.query.filter_by(user_id=usr).first())
+            count = 0
+            user_to_append = []
+            for user in musers:
+                temp = user.full_for_matches()
+                temp['match_percent'] = matching_percentage[count]
+                user_to_append.append(temp)
+                count = count + 1
+        except:  # catch all exceptions
+            e = sys.exc_info()[0]
+            return jsonify('User is not in the database'), 500
 
-        count = 0
-        user_to_append = []
-        for user in musers:
-            temp = user.full_for_matches()
-            temp['match_percent'] = matching_percentage[count]
-            user_to_append.append(temp)
-            count = count + 1
         return jsonify(user_to_append), 200
 
     return app
