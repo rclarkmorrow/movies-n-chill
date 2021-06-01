@@ -45,8 +45,8 @@ class UsersData:
                 , email_address='jane@yahoo.com'
                 , phone_number='999-999-9999'
                 , picture_url='https://randomuser.me/api/portraits/women/81.jpg'
-                , seeking_gender='Male'
-                , self_gender='Female'
+                , seeking_gender='Female'
+                , self_gender='Male'
                 , user_name='Jane'
 
                 , created_by='Script'
@@ -307,7 +307,7 @@ class SelectedMoviesData:
                 user_id='2'
                 , movie_id='1'
 
-                # , created_by='Script'
+                , created_by='Script'
 
             ),
             SelectedMovies(
@@ -360,36 +360,22 @@ class SelectedMoviesData:
 
             ),
             SelectedMovies(
-                user_id='2'
-                , movie_id='9'
+                user_id='3'
+                , movie_id='1'
 
-                # , created_by='Script'
+                , created_by='Script'
 
             ),
             SelectedMovies(
-                user_id='2'
-                , movie_id='10'
+                user_id='3'
+                , movie_id='2'
 
                 # , created_by='Script'
 
             ),
             SelectedMovies(
                 user_id='3'
-                , movie_id='10'
-
-                # , created_by='Script'
-
-            ),
-            SelectedMovies(
-                user_id='3'
-                , movie_id='8'
-
-                # , created_by='Script'
-
-            ),
-            SelectedMovies(
-                user_id='3'
-                , movie_id='6'
+                , movie_id='3'
 
                 # , created_by='Script'
 
@@ -403,6 +389,40 @@ class SelectedMoviesData:
             ),
             SelectedMovies(
                 user_id='3'
+                , movie_id='5'
+
+                # , created_by='Script'
+            ),
+            SelectedMovies(
+                user_id='3'
+                , movie_id='6'
+
+                # , created_by='Script'
+
+            ),
+            SelectedMovies(
+                user_id='3'
+                , movie_id='7'
+
+                # , created_by='Script'
+
+            ),
+            SelectedMovies(
+                user_id='3'
+                , movie_id='8'
+
+                # , created_by='Script'
+            ),
+
+            SelectedMovies(
+                user_id='4'
+                , movie_id='1'
+
+                # , created_by='Script'
+
+            ),
+            SelectedMovies(
+                user_id='4'
                 , movie_id='2'
 
                 # , created_by='Script'
@@ -416,11 +436,101 @@ class SelectedMoviesData:
             ),
             SelectedMovies(
                 user_id='4'
+                , movie_id='4'
+
+                # , created_by='Script'
+            ),
+            SelectedMovies(
+                user_id='4'
+                , movie_id='5'
+
+                # , created_by='Script'
+
+            ),
+            SelectedMovies(
+                user_id='4'
+                , movie_id='6'
+
+                # , created_by='Script'
+            ),
+            SelectedMovies(
+                user_id='4'
+                , movie_id='7'
+
+                # , created_by='Script'
+
+            ),
+            SelectedMovies(
+                user_id='5'
+                , movie_id='1'
+
+                , created_by='Script'
+            ),
+            SelectedMovies(
+                user_id='5'
                 , movie_id='2'
 
                 # , created_by='Script'
-            )
 
+            ),
+            SelectedMovies(
+                user_id='5'
+                , movie_id='3'
+
+                # , created_by='Script'
+            ),
+            SelectedMovies(
+                user_id='5'
+                , movie_id='4'
+
+                # , created_by='Script'
+            ),
+            SelectedMovies(
+                user_id='5'
+                , movie_id='5'
+
+                # , created_by='Script'
+
+            ),
+            SelectedMovies(
+                user_id='5'
+                , movie_id='6'
+
+                # , created_by='Script'
+            ),
+            SelectedMovies(
+                user_id='6'
+                , movie_id='1'
+
+                # , created_by='Script'
+
+            ),
+            SelectedMovies(
+                user_id='6'
+                , movie_id='2'
+
+                # , created_by='Script'
+            ),
+            SelectedMovies(
+                user_id='6'
+                , movie_id='3'
+
+                # , created_by='Script'
+            ),
+            SelectedMovies(
+                user_id='6'
+                , movie_id='4'
+
+                # , created_by='Script'
+
+            ),
+            SelectedMovies(
+                user_id='6'
+                , movie_id='5'
+
+                # , created_by='Script'
+
+            )
         ]
 
     # Inserts seed data into database.
