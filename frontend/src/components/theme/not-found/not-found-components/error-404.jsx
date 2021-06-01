@@ -7,12 +7,11 @@ import {
 } from '@material-ui/core';
 
 // Local imports.
-import useStyles, {
-  ERR_404, NOT_FOUND_TEXT
-} from 'components/theme/not-found/styles';
+import useStyles, { ERROR_TEXT } from 'components/theme/not-found/styles';
 
 const Error404 = () => {
   const classes = useStyles();
+  const { ERR_404, NOT_FOUND } = ERROR_TEXT
   return (
     <Grid container className={classes.pageContainer}>
     <Grid item xs={false} sm={2}></Grid>
@@ -24,7 +23,7 @@ const Error404 = () => {
         <Grid item xs={2}></Grid>
         <Grid item xs={8}>
         <Typography variant="h4" className={classes.errorText} align="center">
-        {NOT_FOUND_TEXT}
+        {NOT_FOUND}
         </Typography>
         </Grid>
         <Grid item xs={2}></Grid>

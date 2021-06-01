@@ -52,8 +52,6 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
             } />
           : isAuthenticated ?
             <Component {...rest} {...props} />
-          // : !currentUser && pathname !== "/signup" ?
-          //   <Redirect to="/signup" />
           :
             <Redirect to={
               {

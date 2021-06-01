@@ -1,0 +1,9 @@
+flask
+flask-wtf
+email_validator
+requests
+flask-login
+flask-sqlalchemy
+Flask-Cors
+gunicorn
+psycopg2-binary
