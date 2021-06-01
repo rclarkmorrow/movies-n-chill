@@ -7,16 +7,31 @@ import { Field, FieldArray, useFormikContext } from 'formik';
 import {
   Box, Chip, Grid, IconButton, Snackbar, Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle, } from '@material-ui/lab';
 import { AddCircle, Delete, MovieOutlined, } from '@material-ui/icons';
 
 // Local imports
-import useStyles, {
+import {
   FAVORITES_SETTINGS, MOVIE_API_SETTINGS, MOVIE_SEARCH_ERRORS
-} from 'components/forms/user-profile/styles';
+} from 'components/forms/user-profile/settings';
 import { fetchTMDBMovies, tmdbMoviesSelector } from 'store';
 import { SearchField } from 'components/forms/fields';
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    listStyle: 'none',
+    padding: theme.spacing(0.5),
+    marginLeft: 40,
+    marginRight: 40,
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
+}));
 
 const MovieSearchForm = () => {
   const classes = useStyles();
@@ -51,7 +66,6 @@ const MovieSearchForm = () => {
   }
 
   const addMovie = async (tmdbMovie) => {
-    alert('ADD MOVIE')
     if (values.movies) {
       // Verify that we aren't adding too many movies.
       if (values.movies.length >= MOVIE_LIMIT) {
@@ -80,7 +94,6 @@ const MovieSearchForm = () => {
     // Create a temporary copy of values.movies so that
     // we can add the new movies to the list and then
     // push the new list to values.movies.
-    alert(`after conditionals`)
     let moviesTemp = setObjectTemp(values.movies);
     moviesTemp ? moviesTemp.push(newMovie) : moviesTemp = [newMovie];
     setFieldValue('movies', moviesTemp);
@@ -117,8 +130,7 @@ const MovieSearchForm = () => {
         name="movies"
         render={arrayHelpers => (
           <>
-          <Box className={classes.chipRoot}>
-            {/* { alert (`mv values on chip:\n ${values.movies}`) } */}
+          <Box className={classes.root}>
             { values.movies && values.movies.map((data, index) => {
               return (
                 <li key={index}>

@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 
 // Local imports
 import { formModel } from 'components/forms/user-profile/form-model';
-import { FAVORITES_SETTINGS } from 'components/forms/user-profile/styles';
+import { FAVORITES_SETTINGS } from 'components/forms/user-profile/settings';
 
 const {
   formField: {
