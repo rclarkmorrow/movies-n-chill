@@ -24,6 +24,8 @@ services:
     expose:
       - 8000
     command: gunicorn -w 1 -b 0.0.0.0:8000 wsgi:app
+    depends_on:
+      - db
 
   db:
     image: postgres:10

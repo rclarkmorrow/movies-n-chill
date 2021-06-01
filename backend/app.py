@@ -1,7 +1,8 @@
 # Third party dependencies
 import datetime
 import sys
-from urllib.request import urlopen
+import os
+from dotenv import load_dotenv
 from flask import Flask, Blueprint, request, jsonify
 from flask_cors import CORS
 # from jose import jwt
@@ -12,8 +13,25 @@ from Matches import Profiles
 app = Flask(__name__)
 api = Blueprint('api', __name__)
 
+# Get database configuration from .evn file
+load_dotenv()
+DB_USER = os.getenv('DB_USER')
+DB_PASS = os.getenv('DB_PASS')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
+DB_NAME = os.getenv('DB_NAME')
+
 app.secret_key = 'a secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MoviesNChill.db'
+# # # OLD SQLITEDB CONFIG
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MoviesNChill.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+     'postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{db}'.format(
+        user=DB_USER,
+        passwd=DB_PASS,
+        host=DB_HOST,
+        port=DB_PORT,
+        db=DB_NAME
+        )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
