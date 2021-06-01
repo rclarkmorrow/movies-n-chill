@@ -12,8 +12,9 @@ import axios from 'axios'
 // authenticated user to create or edit their
 // profile information.
 
-const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/users';
-// const baseURI = 'http://localhost:5000/users';
+// const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/users';
+const baseURI = "/api/users"
+
 // Set initial state values.
 const initialState= {
   isLoading: false,
