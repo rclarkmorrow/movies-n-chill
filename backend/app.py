@@ -8,6 +8,7 @@ from flask_cors import CORS
 # from jose import jwt
 from Models import db, Movies, Users, SelectedMovies
 from Matches import Profiles
+from auth import AuthError, requires_auth, requires_user_match
 
 
 app = Flask(__name__)
@@ -21,17 +22,18 @@ DB_HOST = os.getenv('DB_HOST')
 DB_PORT = os.getenv('DB_PORT')
 DB_NAME = os.getenv('DB_NAME')
 
+
 app.secret_key = 'a secret'
 # # # OLD SQLITEDB CONFIG
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MoviesNChill.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = \
-     'postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{db}'.format(
-        user=DB_USER,
-        passwd=DB_PASS,
-        host=DB_HOST,
-        port=DB_PORT,
-        db=DB_NAME
-        )
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MoviesNChill.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = \
+#      'postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{db}'.format(
+#         user=DB_USER,
+#         passwd=DB_PASS,
+#         host=DB_HOST,
+#         port=DB_PORT,
+#         db=DB_NAME
+#         )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -55,13 +57,24 @@ def home():
     return "Welcome to Movies and Chill"
 
 
-@api.route('/test')
-def test():
-    return "Welcome to Movies and Chill"
+@api.route('/test/<uid>')
+@requires_auth
+def test(uid):
+    # Get the user from the database and make sure the auth0_id
+    # stored for that user matches the id in the header.
+    # NOTE: remove this from production.
+    user = Users.query.filter_by(user_id=uid).first_or_404\
+            (description='There is no data with {}'.format(uid))
+    if requires_user_match(user.auth0_id):
+        # If match, do the logic
+        return "Welcome to Movies and Chill. You have a match", 200
+    # Else return some kind of error
+    return "Unauthorized access", 401
 
 
 # Get and post users.
 @api.route('/users', methods=['GET', 'POST'])
+@requires_auth
 def get_and_post_users():
     # NOTE: Remove "GET" request for production
     # version (we are not returning a list of users
@@ -82,47 +95,51 @@ def get_and_post_users():
 
     elif request.method == 'POST':
         user = request.get_json()
+        if requires_user_match(user['auth0_id']):
+            # NOTE: Uncomment to prevent duplicate auth0_id entries
+            print("User auth0_id:" + user['auth0_id'])
+            if Users.query.filter_by(auth0_id=user['auth0_id']).first():
+                return jsonify('user already in database'), 402
 
-        # NOTE: Uncomment to prevent duplicate auth0_id entries
-        print("User auth0_id:" + user['auth0_id'])
-        if Users.query.filter_by(auth0_id=user['auth0_id']).first():
-            return jsonify('user already in database'), 402
+            print(f'new user: {user}')
+            usr = Users(user_name=user['user_name']
+                        , picture_url=user['picture_url']
+                        , phone_number=user['phone_number']
+                        , email_address=user['email_address']
+                        , auth0_id=user['auth0_id']
+                        , state=user['state']
+                        , city=user['city']
+                        , self_gender=user['self_gender']
+                        , seeking_gender=user['seeking_gender']
+                        , created_by='api post'
+                        )
+            usr.insert()
 
-        print(f'new user: {user}')
-        usr = Users(user_name=user['user_name']
-                    , picture_url=user['picture_url']
-                    , phone_number=user['phone_number']
-                    , email_address=user['email_address']
-                    , auth0_id=user['auth0_id']
-                    , state=user['state']
-                    , city=user['city']
-                    , self_gender=user['self_gender']
-                    , seeking_gender=user['seeking_gender']
-                    , created_by='api post'
-                    )
-        usr.insert()
+            print('user[auth0_id]= ' + user['auth0_id'])
+            new_user = Users.query.filter_by(auth0_id=user['auth0_id']).first()
+            print("New user name: " + new_user.user_name)
+            print("New user id: " + str(new_user.user_id))
 
-        print('user[auth0_id]= ' + user['auth0_id'])
-        new_user = Users.query.filter_by(auth0_id=user['auth0_id']).first()
-        print("New user name: " + new_user.user_name)
-        print("New user id: " + str(new_user.user_id))
+            print(user['movies'])
+            if user['movies']:
+                for movie in user['movies']:
+                    # NOTE: Create a function to add movies to the
+                    # database if they are not already in it, and
+                    # create the SelectedMovies records for the
+                    # user.
 
-        print(user['movies'])
-        if user['movies']:
-            for movie in user['movies']:
-                # NOTE: Create a function to add movies to the
-                # database if they are not already in it, and
-                # create the SelectedMovies records for the
-                # user.
+                    exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
+                    if exist:
+                        print("User exist")
+                        add_movie_to_user(new_user, exist)
+                    else:
+                        add_movie(new_user, movie)
 
-                exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
-                if exist:
-                    print("User exist")
-                    add_movie_to_user(new_user, exist)
-                else:
-                    add_movie(new_user, movie)
-
-        return jsonify('added user'), 200
+            return jsonify('added user'), 200
+        else:
+            return jsonify('auth0_id mismatch'), 401
+    else:
+        return jsonify('could not complete request', 400)
 
 
 def add_movie(user, movie):
@@ -194,6 +211,7 @@ def get_movies():
 
 
 @api.route('/movies/<mid>', methods=['PATCH', 'DELETE'])
+@requires_auth
 def patch_delete_movies(mid):
     # NOTE: Remove for production
     # version (we are not returning a list of movies
@@ -209,6 +227,7 @@ def patch_delete_movies(mid):
 
 # Get or patch user by ID.
 @api.route('/users/<uid>', methods=['GET', 'PATCH', 'DELETE'])
+@requires_auth
 def get_patch_or_delete_user(uid):
     print(f'UID is: {uid}')
     print(f'today: {datetime.date.today()}')  # {datetime.date.today()}')
@@ -220,33 +239,36 @@ def get_patch_or_delete_user(uid):
         print(f'usr is type {type(user)}')
         # The items in the list are object of type User
         return jsonify(user.with_movies())
-    elif request.method == 'PATCH':
-        print("----- Edit -------")
-        req = request.get_json()
-        for key, value in req.items():
-            if key != 'movies':
-                setattr(user, key, value)
-        user['modified_by'] = 'api patch'
 
-        print("Edit user_id: " + str(user['user_id']))
-        selected_movies = [SelectedMovies.query.filter_by(user_id=user['user_id'])]
-        print(selected_movies)
-        if user['movies']:
-            for movie in user['movies']:
-                # NOTE: Create a function to check
-                # the new list of movies and delete
-                # SelectedMovie relationships that
-                # no longer exist, and create new ones.
-                pass
+    if requires_user_match(user.auth0_id):
+        if request.method == 'PATCH':
+            print("----- Edit -------")
+            req = request.get_json()
+            for key, value in req.items():
+                if key != 'movies':
+                    setattr(user, key, value)
+            user['modified_by'] = 'api patch'
 
-        # user.update()
-        return jsonify('user updated'), 200
-    elif request.method == 'DELETE':
-        user.delete()
-        return jsonify('user deleted'), 200
+            print("Edit user_id: " + str(user['user_id']))
+            selected_movies = [SelectedMovies.query.filter_by(user_id=user['user_id'])]
+            print(selected_movies)
+            if user['movies']:
+                for movie in user['movies']:
+                    # NOTE: Create a function to check
+                    # the new list of movies and delete
+                    # SelectedMovie relationships that
+                    # no longer exist, and create new ones.
+                    pass
+
+            # user.update()
+            return jsonify('user updated'), 200
+        elif request.method == 'DELETE':
+            user.delete()
+            return jsonify('user deleted'), 200
 
 
 @api.route('/auth0/<aid>', methods=['GET'])
+@requires_auth
 def get_user_by_autho_id(aid):
     print(f'AUID is: {aid}')
     print(f'today: {datetime.date.today()}')  # {datetime.date.today()}')
@@ -262,6 +284,7 @@ def get_user_by_autho_id(aid):
 
 
 @api.route('/selectedmovies', methods=['GET'])
+# @requires_auth
 def get_data_in_selected_movie():
     if request.method == 'GET':
         selectedmoives = SelectedMovies.query.all()
@@ -281,28 +304,40 @@ def get_data_in_selected_movie():
 
 # Get or patch user by ID.
 @api.route('/users/<uid>/matches', methods=['GET'])
+@requires_auth
 def get_user_matches(uid):
-    # NOTE: matching algorithm should be base on the passed
-    # in user ID's movie list matching with other users
-    # somehow.
+    user = Users.query.filter_by(user_id=uid).first_or_404\
+            (description='There is no data with {}'.format(uid))
+    # if True:
+    if requires_user_match(user.auth0_id):
+        matching_users, matching_percentage = Profiles.get_matching_users(uid)
+        print('matching_user', matching_users)
 
-    matching_users, matching_percentage = Profiles.get_matching_users(uid)
-    print('matching_user', matching_users)
+        musers = []
+        for usr in matching_users:
+            musers.append(Users.query.filter_by(user_id=usr).first())
 
-    musers = []
-    for usr in matching_users:
-        musers.append(Users.query.filter_by(user_id=usr).first())
+        count = 0
+        user_to_append = []
+        for user in musers:
+            temp = user.full_for_matches()
+            temp['match_percent'] = matching_percentage[count]
+            user_to_append.append(temp)
+            count = count + 1
+        return jsonify(user_to_append), 200
+    else:
+        return jsonify('unauthorized'), 401
 
-    count = 0
-    user_to_append = []
-    for user in musers:
-        temp = user.full_for_matches()
-        temp['match_percent'] = matching_percentage[count]
-        user_to_append.append(temp)
-        count = count + 1
-    return jsonify(user_to_append), 200
+
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
+
 
 app.register_blueprint(api, url_prefix='/api')
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
