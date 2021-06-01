@@ -4,7 +4,9 @@ email_validator
 requests
 flask-login
 flask-sqlalchemy
-Flask-Cors
+flask-cors
 gunicorn
 psycopg2-binary
 python-dotenv
+python-jose
+six
