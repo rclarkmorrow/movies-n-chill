@@ -12,7 +12,9 @@ import axios from 'axios';
 // the user still needs to go through the sign
 // up page and create their profile).
 // const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/auth0';
-const baseURI = '/api/auth0'
+const baseURI = 'http://localhost/api/auth0'
+// const baseURI = 'https://5236a6d8b1df.ngrok.io/api/auth0';
+
 
 // Set initial state values.
 const initialState= {

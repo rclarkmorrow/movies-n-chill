@@ -116,10 +116,11 @@ const MovieSearchForm = () => {
         <Typography variant="h4">{FAVORITES_HEADER}</Typography>
         <Typography>
           {
-            values.movies && MOVIE_LIMIT-values.movies.length > 0 &&
-              <>
-                {FAVORITES_INSTRUCTIONS(MOVIE_LIMIT-values.movies.length)}
-              </>
+            values.movies && MOVIE_LIMIT-values.movies.length > 0 ?
+                <>
+                  {FAVORITES_INSTRUCTIONS(MOVIE_LIMIT-values.movies.length)}
+                </>
+              : !values.movies && FAVORITES_INSTRUCTIONS(MOVIE_LIMIT)
           }
         </Typography>
         <Box align="center" mt={2}>

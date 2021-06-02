@@ -13,7 +13,8 @@ import axios from 'axios'
 // profile information.
 
 // const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/users';
-const baseURI = "/api/users"
+const baseURI = "http://localhost/api/users"  // Local testing
+// const baseURI = 'https://5236a6d8b1df.ngrok.io/api/users';
 
 // Set initial state values.
 const initialState= {
