@@ -7,5 +7,5 @@ export const PROFILE_TEXT = {
   SEEKING_LABEL: `Seeking: `,
   MOVIE_LIST_TITLE: `MOVIES`,
   EDIT_BUTTON_TEXT: `EDIT`,
-  EDIT_BUTTON_URL: `/edit-profile/`,
+  EDIT_BUTTON_URL: `/edit-profile`,
 };

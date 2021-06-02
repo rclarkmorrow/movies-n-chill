@@ -9,8 +9,8 @@ import {
 
 // Local imports.
 import {
-  Home, Matches, Movies, NotFound,
-  Profile, UserProfileForm,
+  EditProfile, Home, Matches,
+  Movies, NotFound, Profile, SignUp,
 } from 'components';
 import { ProtectedRoute } from 'auth';
 
@@ -29,7 +29,8 @@ const App = () => {
         <ProtectedRoute path="/matches" component={Matches} />
         <ProtectedRoute path="/movies" component={Movies} />
         <ProtectedRoute exact path="/profile/:profileId?" component={Profile} />
-        <ProtectedRoute path="/signup" component={UserProfileForm} />
+        <ProtectedRoute path="/edit-profile" component={EditProfile} />
+        <ProtectedRoute path="/sign-up" component={SignUp} />
         <ProtectedRoute component={NotFound} />
       </Switch>
     </>
