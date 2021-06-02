@@ -18,6 +18,12 @@ const UserDetails = () => {
       seeking_gender, state, user_name,
   } = userProfile;
 
+  const genderMap = {
+    'Female': 'Women',
+    'Male': 'Men',
+    'Other': "Other"
+  }
+
   return(
     <Box pt={7} pl={4}>
       <Typography variant="h3">
@@ -59,7 +65,7 @@ const UserDetails = () => {
           {GENDER_LABEL}{self_gender}
         </Typography>
         <Typography variant="h6">
-          {SEEKING_LABEL}{seeking_gender}
+          {SEEKING_LABEL}{genderMap[seeking_gender]}
         </Typography>
       </Box>
     </Box>

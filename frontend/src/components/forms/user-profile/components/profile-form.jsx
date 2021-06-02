@@ -2,7 +2,7 @@
 
 // External package dependencies.
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Form, Formik,  } from 'formik';
@@ -19,7 +19,10 @@ import { validationSchema } from 'components/forms/user-profile/form-model';
 import {
   DetailsForm, MovieSearchForm, StepperWrapper,
 } from 'components/forms/user-profile/components';
-import { createUserProfile, editUserProfile } from 'store';
+import {
+  createUserProfile, editUserProfile,
+  fetchCurrentUser
+} from 'store';
 
  // Set up form steps.
  const { FORM_STEPS } = FORM_SETTINGS;
@@ -51,10 +54,13 @@ const ProfileForm = (props) => {
         if (currentUser) {
           const { user_id } = currentUser;
           dispatch(editUserProfile({token, values, user_id }));
+          history.push('/profile');
         } else {
           dispatch(createUserProfile({ token, values }));
+          const { sub } = user;
+          dispatch(fetchCurrentUser({ sub, token }));
+          history.push('/profile');
         }
-        history.push('/profile');
       } else {
       setActiveStep(activeStep + 1);
       actions.setTouched({});
@@ -124,7 +130,9 @@ const ProfileForm = (props) => {
                 <Button
                   disabled={
                     isSubmitting ||
-                    (isLastStep && values.movies && values.movies.length !== 10)
+                    ((isLastStep && values.movies &&
+                        values.movies.length !== 10)
+                      || (isLastStep && !values.movies))
                   }
                   type="submit"
                   variant="contained"
