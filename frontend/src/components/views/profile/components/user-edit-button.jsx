@@ -20,7 +20,8 @@ const UserEditButton = () => {
         startIcon={<Create />}
         onClick={() =>
           history
-          .push(`${EDIT_BUTTON_URL}`)}
+          .push(`${EDIT_BUTTON_URL}`)
+        }
       >
         {EDIT_BUTTON_TEXT}
       </Button>

@@ -41,10 +41,10 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
               <Header />
               <Loading />
             </>
-          : hasErrors && pathname !== "/signup" ?
+          : hasErrors && pathname !== "/sign-up" ?
             <Redirect to={
               {
-                pathname: "/signup",
+                pathname: "/sign-up",
                 state: {
                   from: props.location
                 }
