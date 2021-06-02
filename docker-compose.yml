@@ -1,20 +1,6 @@
 version: '3'
 
 services:
-  frontend:
-    container_name: frontend
-    restart: always
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - 80:80
-      - 8080:8080
-    environment:
-      NODE_ENV: production
-    depends_on:
-      - backend
-
   backend:
     container_name: backend
     restart: always
@@ -24,8 +10,17 @@ services:
     expose:
       - 8000
     command: gunicorn -w 1 -b 0.0.0.0:8000 wsgi:app
+
+  nginx:
+    container_name: nginx
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
     depends_on:
-      - db
+      - backend
 
   db:
     image: postgres:10
