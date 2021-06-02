@@ -7,7 +7,6 @@ import React from 'react';
 import { UserProfileForm } from 'components';
 
 const EditProfile = () => {
-  console.log("HEY HEY HEY")
   return(
     <UserProfileForm />
   );
