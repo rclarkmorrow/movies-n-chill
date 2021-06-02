@@ -2,13 +2,13 @@
 
 // External package dependencies.
 import React, { useState } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Form, Formik,  } from 'formik';
+import { Form, Formik, } from 'formik';
 import {
   Box, Grid, Button, CircularProgress, Step,
-  StepLabel, Stepper, Typography
+  StepLabel, Stepper, Typography,
 } from '@material-ui/core';
 
 // Local imports.
@@ -37,21 +37,20 @@ import {
   };
 };
 
-const ProfileForm = (props) => {
+const ProfileForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { FORM_EDIT_TITLE, FORM_SIGN_UP_TITLE } = FORM_SETTINGS;
   const { getAccessTokenSilently, user } = useAuth0();
   const { currentUser } = useSelector(currentUserSelector);
-  const { startStep } = props;
-  const [activeStep, setActiveStep] = useState(startStep ? startStep : 0);
+  const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = validationSchema[activeStep];
   const isLastStep = activeStep === FORM_STEPS.length - 1;
-
   const _handleSubmit = async(values, actions) => {
     if (isLastStep) {
       const token = await getAccessTokenSilently();
         if (currentUser) {
+          console.log("last step")
           const { user_id } = currentUser;
           dispatch(editUserProfile({token, values, user_id }));
           history.push('/profile');
