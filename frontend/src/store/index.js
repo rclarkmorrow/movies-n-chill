@@ -15,6 +15,12 @@ import{
 } from 'store/slices/tmdb-movies-slice';
 
 import {
+  fetchUserMatches,
+  userMatchesSelector
+
+} from 'store/slices/user-matches-slice';
+
+import {
     createUserProfile,
     editUserProfile,
     fetchUserProfile,
@@ -31,7 +37,9 @@ export {
   editUserProfile,
   fetchCurrentUser,
   fetchTMDBMovies,
+  fetchUserMatches,
   fetchUserProfile,
   tmdbMoviesSelector,
+  userMatchesSelector,
   userProfileSelector,
 };

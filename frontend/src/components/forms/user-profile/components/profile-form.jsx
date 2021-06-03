@@ -46,11 +46,11 @@ const ProfileForm = () => {
   const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = validationSchema[activeStep];
   const isLastStep = activeStep === FORM_STEPS.length - 1;
+
   const _handleSubmit = async(values, actions) => {
     if (isLastStep) {
       const token = await getAccessTokenSilently();
         if (currentUser) {
-          console.log("last step")
           const { user_id } = currentUser;
           dispatch(editUserProfile({token, values, user_id }));
           history.push('/profile');
