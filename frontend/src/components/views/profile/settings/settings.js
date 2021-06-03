@@ -5,7 +5,7 @@
 export const PROFILE_TEXT = {
   GENDER_LABEL: `Gender: `,
   SEEKING_LABEL: `Seeking: `,
-  MOVIE_LIST_TITLE: `MOVIES`,
+  MOVIE_LIST_TITLE: `Favorite Movies`,
   EDIT_BUTTON_TEXT: `EDIT`,
   EDIT_BUTTON_URL: `/edit-profile`,
 };
