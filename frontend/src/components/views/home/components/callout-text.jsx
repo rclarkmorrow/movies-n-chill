@@ -4,8 +4,7 @@
 import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import {Favorite, FavoriteBorder }from '@material-ui/icons';
 
 // Local imports.
 import { CALLOUT_TEXT } from 'components/views/home/settings';
@@ -40,17 +39,17 @@ const CalloutText = () => {
         alignItems="center"
       >
         <Grid item xs={1} align="left">
-          <FavoriteBorderIcon />
-          <FavoriteIcon />
-          <FavoriteBorderIcon />
+          <FavoriteBorder />
+          <Favorite />
+          <FavoriteBorder />
         </Grid>
         <Grid item xs={10} align="center">
           {CALLOUT_TEXT}
         </Grid>
         <Grid item xs={1} align="right">
-          <FavoriteBorderIcon />
-          <FavoriteIcon />
-          <FavoriteBorderIcon />
+          <FavoriteBorder />
+          <Favorite />
+          <FavoriteBorder />
         </Grid>
       </Grid>
     </Typography>
