@@ -17,7 +17,7 @@ const baseURI = "http://localhost/api/users"  // Local testing
 // const baseURI = 'https://5236a6d8b1df.ngrok.io/api/users';
 
 // Set initial state values.
-const initialState= {
+const initialState = {
   isLoading: false,
   hasErrors: false,
   userProfile: false,

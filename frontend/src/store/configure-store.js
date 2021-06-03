@@ -9,12 +9,14 @@ import {
 // Local imports.
 import currentUserSlice from 'store/slices/current-user-slice';
 import tmdbMoviesSlice from 'store/slices/tmdb-movies-slice';
+import userMatchesSlice from 'store/slices/user-matches-slice';
 import userProfileSlice from 'store/slices/user-profile-slice';
 
 // Combine the reducers.
 const reducer = combineReducers({
   currentUser: currentUserSlice,
   tmdbMovies: tmdbMoviesSlice,
+  userMatches: userMatchesSlice,
   userProfile: userProfileSlice,
 });
 
