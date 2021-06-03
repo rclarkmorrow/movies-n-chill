@@ -176,7 +176,7 @@ def add_movie(user, movie):
 
     except:  # catch all exceptions
         e = sys.exc_info()[0]
-        return jsonify('Error: {1}', e), 500
+        return jsonify("Can NOT add the new movie to Movies table"), 500
     return jsonify('added movie'), 200
 
 
@@ -186,8 +186,84 @@ def add_movie_to_user(user, movie):
         smv.insert()
     except:  # catch all exceptions
         e = sys.exc_info()[0]
-        return jsonify('Error: {1}', e), 500
+        return jsonify('Can NOT map the movie to the user'), 500
     return jsonify('added movie to the user'), 200
+
+
+def remove_movie_from_user(curr_map):
+    try:
+        print("--- Delete existing User and Movies mapping ----")
+
+        for curr in curr_map:
+            smv = SelectedMovies.query.filter_by(user_id=curr.user_id, movie_id=curr.movie_id).first()
+            smv.delete()
+
+    except:  # catch all exceptions
+        e = sys.exc_info()[0]
+        return jsonify('Error remove movie from the user'), 500
+
+
+# Get delete or patch user by ID.
+@app.route('/users/<uid>', methods=['GET', 'PATCH', 'DELETE'])
+def get_patch_or_delete_user(uid):
+    print(f'UID is: {uid}')
+    print(f'today: {datetime.date.today()}')  # {datetime.date.today()}')
+    user = Users.query.filter_by(user_id=uid).first_or_404\
+            (description='There is no data with {}'.format(uid))
+
+    if request.method == 'GET':
+        # Returned object is a list.
+        print(f'usr is type {type(user)}')
+        # The items in the list are object of type User
+        return jsonify(user.with_movies())
+
+    elif request.method == 'PATCH':  # Update a user with movies
+        print("----- Edit -------")
+
+        req = request.get_json()
+        for key, value in req.items():
+            if key != 'movies':
+                setattr(user, key, value)
+        user.modified_by = 'api patch'
+
+        print("Edit user: " + uid)
+        print("req['movies']: " + str(req['movies']))
+
+        # Remove movies that are not in the new mapping list
+        existing_map = SelectedMovies.query.filter_by(user_id=uid)
+        remove_movie_from_user(existing_map)
+
+        # Add and map new movie selection to the user
+        if req['movies']:
+            for movie in req['movies']:
+                print("Each movie: " + str(movie))
+                print("movie['tmdb_id'] :" + str(movie['tmdb_id']))
+                exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first() is not None
+                print("Exist result : " + str(exist))
+                if exist:
+                    print("Movie exist")
+                    print("Movie TMDB ID: " + str(movie['tmdb_id']))
+                    existing_movie = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
+                    print("MID: " + str(existing_movie.movie_id))
+                    mapped = SelectedMovies.query.filter_by(user_id=uid
+                                                            , movie_id=existing_movie.movie_id).first() is not None
+
+                    if mapped:  # Already mapped with the user
+                        pass
+                    else:  # Movie exists but not map with the user
+                        print("Map movie to user: " + str(existing_movie))
+                        add_movie_to_user(uid, existing_movie.movie_id)
+
+                else:
+                    print("New movie :" + str(req['movies']))
+                    add_movie(uid, movie)  # Add new movie to Movies table and map with the user
+
+        user.update()
+        return jsonify('user updated'), 200
+
+    elif request.method == 'DELETE':
+        user.delete()
+        return jsonify('user deleted'), 200
 
 
 # Get and post movies
@@ -223,48 +299,6 @@ def patch_delete_movies(mid):
         return jsonify('movie deleted'), 200
     if request.method == 'PATCH':
         return jsonify('No edit movie feature'), 200
-
-
-# Get or patch user by ID.
-@api.route('/users/<uid>', methods=['GET', 'PATCH', 'DELETE'])
-@requires_auth
-def get_patch_or_delete_user(uid):
-    print(f'UID is: {uid}')
-    print(f'today: {datetime.date.today()}')  # {datetime.date.today()}')
-    user = Users.query.filter_by(user_id=uid).first_or_404\
-            (description='There is no data with {}'.format(uid))
-
-    if request.method == 'GET':
-        # Returned object is a list.
-        print(f'usr is type {type(user)}')
-        # The items in the list are object of type User
-        return jsonify(user.with_movies())
-
-    if requires_user_match(user.auth0_id):
-        if request.method == 'PATCH':
-            print("----- Edit -------")
-            req = request.get_json()
-            for key, value in req.items():
-                if key != 'movies':
-                    setattr(user, key, value)
-            user['modified_by'] = 'api patch'
-
-            print("Edit user_id: " + str(user['user_id']))
-            selected_movies = [SelectedMovies.query.filter_by(user_id=user['user_id'])]
-            print(selected_movies)
-            if user['movies']:
-                for movie in user['movies']:
-                    # NOTE: Create a function to check
-                    # the new list of movies and delete
-                    # SelectedMovie relationships that
-                    # no longer exist, and create new ones.
-                    pass
-
-            # user.update()
-            return jsonify('user updated'), 200
-        elif request.method == 'DELETE':
-            user.delete()
-            return jsonify('user deleted'), 200
 
 
 @api.route('/auth0/<aid>', methods=['GET'])

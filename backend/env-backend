@@ -1,0 +1,13 @@
+
+# Database
+DB_USER=mncadmin
+DB_PASS=frogorigamiplanechocolate
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=moviesnchill
+# Auth0
+DOMAIN=moviesnchill.us.auth0.com
+ALGORITHMS=RS256
+API_AUDIENCE=MoviesNChill
+CLIENT_ID=KOozcZalWEzMc328EiNQ1xlOpy8azokg
+CLIENT_SECRET=Hhk2UJHEgyR1UYJpzrPITfas4ZP9kQbNLhxvlUDzW97ezJkWTU5NJZ_h7HEk0T4w

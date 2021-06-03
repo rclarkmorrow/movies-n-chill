@@ -1,0 +1,3 @@
+POSTGRES_USER=mncadmin
+POSTGRES_PASSWORD=frogorigamiplanechocolate
+POSTGRES_DB=moviesnchill
