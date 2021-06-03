@@ -1,26 +1,54 @@
 // ./src/components/views/matches/matches.jsx
 
 // External package dependencies.
-import React from 'react';
-import { Box, Grid, Typography } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAuth0 } from '@auth0/auth0-react';
+
 
 // Local imports.
-import { CenteredPage, Header } from 'components';
+import { Main } from 'components/views/matches/components';
+import { Error404, Header, Loading  } from 'components'
+import {
+  currentUserSelector, fetchUserMatches,
+  userMatchesSelector,
+} from 'store';
 
 // This is the main matches page wrapper. It should determine
 // state, and display components appropriately.
-const Matches = () => (
-  <>
-    <Header />
-    <CenteredPage>
-      <Grid item xs={12} align="center">
-        <Typography variant="h2">MATCHES PAGE</Typography>
-      </Grid>
-      <Box mt={5}>
-        <Typography variant="h4">components go here</Typography>
-      </Box>
-    </CenteredPage>
-  </>
-);
+const Matches = () => {
+  const dispatch = useDispatch();
+  const { getAccessTokenSilently } = useAuth0();
+  const { currentUser } = useSelector(currentUserSelector);
+  const {
+    hasErrors, isLoading: areMatchesLoading,
+  } = useSelector(userMatchesSelector);
+
+  useEffect(() => {
+    const getUserMatches = async () => {
+      const token = await getAccessTokenSilently();
+      if (currentUser) {
+        const { user_id } = currentUser
+        dispatch(fetchUserMatches({user_id, token}));
+      }
+    }
+    getUserMatches();
+  }, [dispatch, currentUser,
+    getAccessTokenSilently]);
+
+
+  return (
+    <>
+      <Header />
+      { areMatchesLoading ?
+        <Loading />
+      : currentUser ?
+        <Main />
+      :  hasErrors &&
+        <Error404 />
+      }
+    </>
+  );
+};
 
 export default Matches;
