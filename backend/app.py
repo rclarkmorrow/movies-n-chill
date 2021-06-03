@@ -204,7 +204,7 @@ def remove_movie_from_user(curr_map):
 
 
 # Get delete or patch user by ID.
-@app.route('/users/<uid>', methods=['GET', 'PATCH', 'DELETE'])
+@api.route('/users/<uid>', methods=['GET', 'PATCH', 'DELETE'])
 def get_patch_or_delete_user(uid):
     print(f'UID is: {uid}')
     print(f'today: {datetime.date.today()}')  # {datetime.date.today()}')
