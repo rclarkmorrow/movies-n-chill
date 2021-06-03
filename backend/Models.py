@@ -86,7 +86,7 @@ class Users(BaseModel, db.Model):
         return {
             'user_id': self.user_id
             , 'user_name': self.user_name
-            , 'picture_URL': self.picture_url
+            , 'picture_url': self.picture_url
             , 'phone_number': self.phone_number
             , 'email_address': self.email_address
             , 'auth0_id': self.auth0_id
@@ -124,7 +124,7 @@ class Users(BaseModel, db.Model):
         return {
             'user_id': self.user_id
             , 'user_name': self.user_name
-            , 'picture_URL': self.picture_url
+            , 'picture_url': self.picture_url
             , 'phone_number': self.phone_number
             , 'email_address': self.email_address
             , 'state': self.state
