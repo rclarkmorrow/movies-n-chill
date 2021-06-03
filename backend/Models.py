@@ -64,6 +64,7 @@ class Users(BaseModel, db.Model):
                  , self_gender=None
                  , seeking_gender=None
                  , created_by=None
+                 , modified_by=None
     ):
 
         self.user_name = user_name
@@ -75,10 +76,9 @@ class Users(BaseModel, db.Model):
         self.city = city
         self.self_gender = self_gender
         self.seeking_gender = seeking_gender
-        # self.is_active = True
         self.created_by = created_by
         self.created_date = datetime.date.today()
-        self.modified_by = created_by
+        self.modified_by = modified_by
         self.modified_date = datetime.date.today()
 
     # Return full details.
@@ -136,7 +136,7 @@ class Users(BaseModel, db.Model):
 
 class Movies(BaseModel, db.Model):
 
-    # # Main model
+    # Movies model
     __tablename__ = 'Movies'
 
     # Auto-incrementing, unique primary key
@@ -176,7 +176,6 @@ class Movies(BaseModel, db.Model):
         self.genres = genres
         self.rating = rating
         self.year = year
-        # self.is_active = True
         self.created_by = created_by
         self.created_date = datetime.date.today()
         self.modified_by = modified_by
@@ -202,7 +201,7 @@ class Movies(BaseModel, db.Model):
 
 
 class SelectedMovies(BaseModel, db.Model):
-    # Main model
+    # SelectedMovies model
     __tablename__ = 'SelectedMovies'
     # Autoincrementing, unique primary key
     selected_movie_id = db.Column(db.Integer, primary_key=True)
@@ -211,11 +210,6 @@ class SelectedMovies(BaseModel, db.Model):
                         nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('Movies.movie_id'),
                          nullable=False)
-    # is_active = db.Column(db.Boolean(2), nullable=False)
-    # created_by = db.Column(db.String(10), nullable=False)
-    # created_date = db.Column(db.String(10), nullable=False)
-    # modified_by = db.Column(db.String(10))
-    # modified_date = db.Column(db.String(10))
 
     # Relationships
     movies = db.relationship('Movies', back_populates='users', lazy=True)
@@ -228,11 +222,6 @@ class SelectedMovies(BaseModel, db.Model):
                  ):
         self.user_id = int(user_id)
         self.movie_id = int(movie_id)
-        # self.is_active = True
-        # self.created_by = created_by
-        # self.created_date = datetime.date.today()
-        # self.modified_by = created_by
-        # self.modified_date = datetime.date.today()
 
     # Return full details.
     def full(self):

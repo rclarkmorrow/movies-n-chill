@@ -38,7 +38,7 @@ class UsersData:
 
             ),
             Users(
-                auth0_id='addthislatereee'
+                auth0_id='6094d4285f2168006b5bf1d7'
                 , state='OR'
                 , city='Portland'
                 , email_address='jane@yahoo.com'
@@ -103,6 +103,20 @@ class UsersData:
                 , seeking_gender='Other'
                 , self_gender='Male'
                 , user_name='Dan'
+
+                , created_by='Script'
+
+            ),
+            Users(
+                auth0_id='34566333'
+                , state='CA'
+                , city='San Francisco'
+                , email_address='mr.a@yahoo.com'
+                , phone_number='360-321-3455'
+                , picture_url='https://randomuser.me/api/portraits/men/20.jpg'
+                , seeking_gender='Other'
+                , self_gender='Male'
+                , user_name='Mr.A'
 
                 , created_by='Script'
 
@@ -220,6 +234,26 @@ class MovieData:
 
                 , created_by='Script'
             ),
+            Movies(
+                movie_title='Wonder Woman 1984'
+                , tmdb_id='1893111'
+                , url_movie_image='https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg'
+                , genres='[28, 12, 878]'
+                , rating='6.5'
+                , year='1998'
+
+                , created_by='Script'
+            ),
+            Movies(
+                movie_title='Cruella'
+                , tmdb_id='18931112'
+                , url_movie_image='https://www.themoviedb.org/t/p/w600_and_h900_bestv2/hjS9mH8KvRiGHgjk6VUZH7OT0Ng.jpg'
+                , genres='[28, 12, 878]'
+                , rating='6.5'
+                , year='2021'
+
+                , created_by='Script'
+            )
         ]
 
     # Inserts seed data into database.
@@ -235,300 +269,187 @@ class SelectedMoviesData:
             SelectedMovies(
                 user_id='1'
                 , movie_id='1'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='1'
                 , movie_id='2'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='1'
                 , movie_id='3'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='1'
                 , movie_id='4'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='1'
                 , movie_id='5'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='1'
                 , movie_id='6'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='1'
                 , movie_id='7'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='1'
                 , movie_id='8'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='1'
                 , movie_id='9'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='1'
                 , movie_id='10'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='2'
                 , movie_id='1'
-
-                , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='2'
                 , movie_id='2'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='2'
                 , movie_id='3'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='2'
                 , movie_id='4'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='2'
                 , movie_id='5'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='2'
                 , movie_id='6'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='2'
                 , movie_id='7'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='2'
                 , movie_id='8'
-
-                # , created_by='Script'
-
+            ),
+            SelectedMovies(
+                user_id='2'
+                , movie_id='11'
+            ),
+            SelectedMovies(
+                user_id='2'
+                , movie_id='12'
             ),
             SelectedMovies(
                 user_id='3'
                 , movie_id='1'
-
-                , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='3'
                 , movie_id='2'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='3'
                 , movie_id='3'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='3'
                 , movie_id='4'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='3'
                 , movie_id='5'
-
-                # , created_by='Script'
             ),
             SelectedMovies(
                 user_id='3'
                 , movie_id='6'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='3'
                 , movie_id='7'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='3'
                 , movie_id='8'
-
-                # , created_by='Script'
             ),
 
             SelectedMovies(
                 user_id='4'
                 , movie_id='1'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='4'
                 , movie_id='2'
-
-                # , created_by='Script'
             ),
             SelectedMovies(
                 user_id='4'
                 , movie_id='3'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='4'
                 , movie_id='4'
-
-                # , created_by='Script'
             ),
             SelectedMovies(
                 user_id='4'
                 , movie_id='5'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='4'
                 , movie_id='6'
-
-                # , created_by='Script'
             ),
             SelectedMovies(
                 user_id='4'
                 , movie_id='7'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='5'
                 , movie_id='1'
-
-                , created_by='Script'
             ),
             SelectedMovies(
                 user_id='5'
                 , movie_id='2'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='5'
                 , movie_id='3'
-
-                # , created_by='Script'
             ),
             SelectedMovies(
                 user_id='5'
                 , movie_id='4'
-
-                # , created_by='Script'
             ),
             SelectedMovies(
                 user_id='5'
                 , movie_id='5'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='5'
                 , movie_id='6'
-
-                # , created_by='Script'
             ),
             SelectedMovies(
                 user_id='6'
                 , movie_id='1'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='6'
                 , movie_id='2'
-
-                # , created_by='Script'
             ),
             SelectedMovies(
                 user_id='6'
                 , movie_id='3'
-
-                # , created_by='Script'
             ),
             SelectedMovies(
                 user_id='6'
                 , movie_id='4'
-
-                # , created_by='Script'
-
             ),
             SelectedMovies(
                 user_id='6'
                 , movie_id='5'
-
-                # , created_by='Script'
-
             )
         ]
 
