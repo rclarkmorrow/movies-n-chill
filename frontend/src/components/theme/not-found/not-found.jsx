@@ -4,7 +4,7 @@
 import React from 'react';
 
 // Local imports.
-import { Header, Error404 } from 'components';
+import { Footer, Header, Error404 } from 'components';
 
 const NotFound = () => {
 
@@ -13,6 +13,7 @@ const NotFound = () => {
     <>
       <Header />
       <Error404 />
+      <Footer />
     </>
     );
   };
