@@ -5,7 +5,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 // Local imports.
-import { CenteredPage, Header, Loading, } from 'components';
+import { CenteredPage, Footer, Header, Loading, } from 'components';
 import { ProfileForm } from 'components/forms/user-profile/components';
 import { currentUserSelector } from 'store';
 
@@ -24,6 +24,7 @@ const UserProfileForm = () => {
           </CenteredPage>
         </>
     }
+    <Footer />
   </>
   );
 };

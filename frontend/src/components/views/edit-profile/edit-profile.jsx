@@ -8,7 +8,9 @@ import { UserProfileForm } from 'components';
 
 const EditProfile = () => {
   return(
-    <UserProfileForm />
+    <>
+      <UserProfileForm />
+    </>
   );
 };
 
