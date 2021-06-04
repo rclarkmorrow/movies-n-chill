@@ -8,7 +8,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 // Local imports.
 import { Main } from 'components/views/matches/components';
-import { Error404, Header, Loading  } from 'components'
+import { Error404, Footer, Header, Loading  } from 'components'
 import {
   currentUserSelector, fetchUserMatches,
   userMatchesSelector,
@@ -36,7 +36,6 @@ const Matches = () => {
   }, [dispatch, currentUser,
     getAccessTokenSilently]);
 
-
   return (
     <>
       <Header />
@@ -47,6 +46,7 @@ const Matches = () => {
       :  hasErrors &&
         <Error404 />
       }
+      <Footer />
     </>
   );
 };
