@@ -38,18 +38,18 @@ const UserMovies = (props) => {
     </Grid>
     <Grid item xs={1} />
     <Grid item xs={10} align="center">
-    <div className={classes.root} style={{marginBottom: '50px'}}>
-    <GridList cols={2.5} className={classes.gridList} cellHeight={450}>
-      { movies.map((movie) => (
-        <GridListTile key={movie.url_movie_image}>
-          <img src={movie.url_movie_image} alt={movie.movie_title}/>
-          <GridListTileBar
-            title={movie.movie_title}
-          />
-        </GridListTile>
-      ))};
-    </GridList>
-    </div>
+      <Box mb={5}>
+        <GridList cols={2.5} className={classes.gridList} cellHeight={450}>
+          { movies.map((movie) => (
+            <GridListTile key={movie.url_movie_image}>
+              <img src={movie.url_movie_image} alt={movie.movie_title}/>
+              <GridListTileBar
+                title={movie.movie_title}
+              />
+            </GridListTile>
+          ))};
+        </GridList>
+      </Box>
     </Grid>
     <Grid item xs={1} />
     </Grid>

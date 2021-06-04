@@ -1,25 +1,35 @@
 // ./src/components/views/movies/movies.jsx
 
 // External package dependencies.
-import { Box, Grid, Typography } from '@material-ui/core';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 // Local imports.
-import { CenteredPage, Header } from 'components';
+import { CenteredPage, Error404, Header, Loading } from 'components';
+import { MoviesList } from 'components/views/movies/components';
+import { currentUserSelector } from 'store';
 
 // This is the main movie page wrapper. It should determine
 // state, and display components appropriately.
-const Movies = () => (
-  <>
-    <Header />
-    <CenteredPage>
-      <Grid item xs={12} align="center">
-        <Typography variant="h2">MOVIES PAGE</Typography>
-      </Grid>
-      <Box mt={5}>
-        <Typography variant="h4">components go here</Typography>
-      </Box>
-    </CenteredPage>
-  </>
-);
+const Movies = () => {
+  const {
+    currentUser, isLoading: isCurrentUserLoading,
+    hasErrors
+  } = useSelector(currentUserSelector);
 
+  return(
+    <>
+      <Header />
+      { isCurrentUserLoading ?
+        <Loading />
+      : currentUser ?
+        <CenteredPage>
+          <MoviesList />
+        </CenteredPage>
+      :  hasErrors &&
+        <Error404 />
+      }
+    </>
+);
+};
 export default Movies;
