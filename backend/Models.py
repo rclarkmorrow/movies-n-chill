@@ -218,7 +218,6 @@ class SelectedMovies(BaseModel, db.Model):
     def __init__(self,
                  user_id=None,
                  movie_id=None,
-                 created_by=None
                  ):
         self.user_id = int(user_id)
         self.movie_id = int(movie_id)
