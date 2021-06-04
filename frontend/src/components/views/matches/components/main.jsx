@@ -3,7 +3,7 @@
 // External package dependencies.
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import { Favorite, FavoriteBorder } from '@material-ui/icons'
 
 // Local imports.

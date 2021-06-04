@@ -31,8 +31,6 @@ const MatchesPanel = () => {
                       user_name={match.user_name}
                       email_address={match.email_address}
                       picture_url={match.picture_url}
-                      self_gender={match.self_gender}
-                      seeking_gender={match.seeking_gender}
                       city={match.city}
                       state={match.state}
                       match_percent={match.match_percent}
