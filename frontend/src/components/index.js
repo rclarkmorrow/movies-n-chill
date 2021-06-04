@@ -4,6 +4,7 @@
 
 import CenteredPage from 'components/theme/centered-page';
 import EditProfile from 'components/views/edit-profile';
+import Footer from 'components/theme/footer';
 import Header from 'components/theme/header';
 import Home from 'components/views/home';
 import Loading from 'components/theme/loading';
@@ -16,7 +17,7 @@ import SignUp from 'components/views/sign-up';
 import UserProfileForm from 'components/forms/user-profile';
 
 export {
-  CenteredPage, EditProfile, Header, Home,
-  Loading, Matches, Movies, NotFound,
+  CenteredPage, EditProfile, Footer, Header,
+  Home, Loading, Matches, Movies, NotFound,
   Error404, Profile, SignUp, UserProfileForm,
 };

@@ -4,8 +4,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Avatar, Box, Card, CardContent,
-  CardActions, Grid, IconButton, Link,
-  Typography
+  CardActions, Grid, Link, Typography
 } from '@material-ui/core';
 import { Email, Favorite, Phone } from '@material-ui/icons';
 
@@ -38,12 +37,11 @@ const ProfileCard = (props) => {
   const {
     user_id, user_name, picture_url,
     email_address, phone_number, city,
-    state, self_gender, seeking_gender,
-    match_percent,
+    state, match_percent,
   } = props
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} elevation={0} square={true}>
       <CardContent>
         <Grid container spacing={4}>
           <Grid item>

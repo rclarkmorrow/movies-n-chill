@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 
 // Local imports.
-import { Error404, Header, Loading } from 'components';
+import { Error404, Footer, Header, Loading } from 'components';
 import { Main } from 'components/views/profile/components';
 import {
   currentUserSelector,
@@ -60,6 +60,7 @@ const Profile = () => {
       :  hasErrors &&
         <Error404 />
       }
+      <Footer />
     </>
   );
 };
