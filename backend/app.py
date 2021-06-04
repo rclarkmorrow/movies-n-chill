@@ -95,6 +95,7 @@ def get_and_post_users():
 
     elif request.method == 'POST':
         user = request.get_json()
+        # if True:
         if requires_user_match(user['auth0_id']):
             # NOTE: Uncomment to prevent duplicate auth0_id entries
             print("User auth0_id:" + user['auth0_id'])
@@ -131,7 +132,7 @@ def get_and_post_users():
                     exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
                     if exist:
                         print("User exist")
-                        add_movie_to_user(new_user, exist)
+                        add_movie_to_user(new_user.user_id, exist.movie_id)
                     else:
                         add_movie(new_user, movie)
 
@@ -143,6 +144,7 @@ def get_and_post_users():
 
 
 def add_movie(user, movie):
+    print('ADD MOVIE')
     try:
         # ------------------------------
         # add movie to Movies table
@@ -151,12 +153,12 @@ def add_movie(user, movie):
         print("user name:" + str(user.user_name))
         print(movie)
 
-        mv = Movies(tmdb_id=movie['tmdb_id']
-                    , movie_title=movie['movie_title']
-                    , url_movie_image=movie['url_movie_image']
-                    , genres=movie['genres']
-                    , rating=movie['rating']
-                    , year=movie['year']
+        mv = Movies(tmdb_id=str(movie['tmdb_id'])
+                    , movie_title=str(movie['movie_title'])
+                    , url_movie_image=str(movie['url_movie_image'])
+                    , genres=str(movie['genres'])
+                    , rating=str(movie['rating'])
+                    , year=str(movie['year'])
                     , created_by='app post'
                     )
         print("Try to insert new movie")
@@ -167,27 +169,29 @@ def add_movie(user, movie):
         # ------------------------------
 
         print(" ---- Match movie and user ----")
-        print("Match movie tmdb_id: " + movie['tmdb_id'])
-        print("Match user_id: " + str(user.user_id))
+        print("Match movie tmdb_id: " + str(movie['tmdb_id']))
+        # print("Match user_id: " + str(user.user_id))
         new_movie = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
-        add_movie_to_user(user,new_movie)
+        add_movie_to_user(user.user_id, new_movie.movie_id)
         # smv = SelectedMovies(user_id=user.user_id, movie_id=new_movie.movie_id)
         # smv.insert()
 
     except:  # catch all exceptions
         e = sys.exc_info()[0]
-        return jsonify("Can NOT add the new movie to Movies table"), 500
-    return jsonify('added movie'), 200
+        print(f'add movie {e}')
 
 
-def add_movie_to_user(user, movie):
+
+def add_movie_to_user(user_id, movie_id):
+    print("ADDDD")
     try:
-        smv = SelectedMovies(user_id=user.user_id, movie_id=movie.movie_id)
+        print(f'in add movie to user- user {user_id}, movie {movie_id}')
+        smv = SelectedMovies(user_id=int(user_id), movie_id=int(movie_id))
+        print(f'svm  {smv}')
         smv.insert()
     except:  # catch all exceptions
         e = sys.exc_info()[0]
-        return jsonify('Can NOT map the movie to the user'), 500
-    return jsonify('added movie to the user'), 200
+        print(e)
 
 
 def remove_movie_from_user(curr_map):
@@ -200,11 +204,11 @@ def remove_movie_from_user(curr_map):
 
     except:  # catch all exceptions
         e = sys.exc_info()[0]
-        return jsonify('Error remove movie from the user'), 500
-
+        print(f'remove movie {e}')
 
 # Get delete or patch user by ID.
 @api.route('/users/<uid>', methods=['GET', 'PATCH', 'DELETE'])
+@requires_auth
 def get_patch_or_delete_user(uid):
     print(f'UID is: {uid}')
     print(f'today: {datetime.date.today()}')  # {datetime.date.today()}')
@@ -216,54 +220,58 @@ def get_patch_or_delete_user(uid):
         print(f'usr is type {type(user)}')
         # The items in the list are object of type User
         return jsonify(user.with_movies())
+    # if True:
+    if requires_user_match(user.auth0_id):
+        if request.method == 'PATCH':  # Update a user with movies
+            print("----- Edit -------")
 
-    elif request.method == 'PATCH':  # Update a user with movies
-        print("----- Edit -------")
+            req = request.get_json()
+            print(req)
+            # return req
+            for key, value in req.items():
+                if key != 'movies':
+                    setattr(user, key, value)
+            user.modified_by = 'api patch'
 
-        req = request.get_json()
-        for key, value in req.items():
-            if key != 'movies':
-                setattr(user, key, value)
-        user.modified_by = 'api patch'
+            print("Edit user: " + uid)
+            # print("req['movies']: " + str(req['movies']))
 
-        print("Edit user: " + uid)
-        print("req['movies']: " + str(req['movies']))
+            # Remove movies that are not in the new mapping list
+            existing_map = SelectedMovies.query.filter_by(user_id=uid)
+            remove_movie_from_user(existing_map)
 
-        # Remove movies that are not in the new mapping list
-        existing_map = SelectedMovies.query.filter_by(user_id=uid)
-        remove_movie_from_user(existing_map)
+            # Add and map new movie selection to the user
+            if req['movies']:
+                for movie in req['movies']:
+                    print("movie['tmdb_id'] :" + str(movie['tmdb_id']))
+                    exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first() is not None
+                    # print("Exist result : " + str(exist))
+                    if exist:
+                        # print("Movie exist")
+                        # print("Movie TMDB ID: " + str(movie['tmdb_id']))
+                        existing_movie = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
+                        # print("MID: " + str(existing_movie.movie_id))
+                        mapped = SelectedMovies.query.filter_by(user_id=uid
+                                                                , movie_id=existing_movie.movie_id).first() is not None
 
-        # Add and map new movie selection to the user
-        if req['movies']:
-            for movie in req['movies']:
-                print("Each movie: " + str(movie))
-                print("movie['tmdb_id'] :" + str(movie['tmdb_id']))
-                exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first() is not None
-                print("Exist result : " + str(exist))
-                if exist:
-                    print("Movie exist")
-                    print("Movie TMDB ID: " + str(movie['tmdb_id']))
-                    existing_movie = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
-                    print("MID: " + str(existing_movie.movie_id))
-                    mapped = SelectedMovies.query.filter_by(user_id=uid
-                                                            , movie_id=existing_movie.movie_id).first() is not None
+                        if mapped:  # Already mapped with the user
+                            print('mapped')
+                            pass
+                        else:  # Movie exists but not map with the user
+                            # print("Map movie to user: " + str(existing_movie.movie_title))
+                            add_movie_to_user(uid, existing_movie.movie_id)
 
-                    if mapped:  # Already mapped with the user
-                        pass
-                    else:  # Movie exists but not map with the user
-                        print("Map movie to user: " + str(existing_movie))
-                        add_movie_to_user(uid, existing_movie.movie_id)
+                    else:
+                        # print("New movie :" + str(movie['tmdb_id']))
+                        add_movie(user, movie)  # Add new movie to Movies table and map with the user
 
-                else:
-                    print("New movie :" + str(req['movies']))
-                    add_movie(uid, movie)  # Add new movie to Movies table and map with the user
+            user.update()
+            return jsonify('user updated'), 200
 
-        user.update()
-        return jsonify('user updated'), 200
-
-    elif request.method == 'DELETE':
-        user.delete()
-        return jsonify('user deleted'), 200
+        elif request.method == 'DELETE':
+            user.delete()
+            return jsonify('user deleted'), 2004
+    return 'something went wrong', 500
 
 
 # Get and post movies
@@ -318,7 +326,7 @@ def get_user_by_autho_id(aid):
 
 
 @api.route('/selectedmovies', methods=['GET'])
-# @requires_auth
+@requires_auth
 def get_data_in_selected_movie():
     if request.method == 'GET':
         selectedmoives = SelectedMovies.query.all()
