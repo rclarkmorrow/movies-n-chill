@@ -12,8 +12,8 @@ import {
 // a background for other components.
 const CenteredPage = ({children}) => (
   <Grid container>
-    <Grid item xs={false} sm={2} />
-    <Grid item xs={12} sm={8}>
+    <Grid item xs={false} sm={1} />
+    <Grid item xs={12} sm={10}>
       <Paper>
         <Box pt={5}>
           <Grid  container justify="space-around">
@@ -22,7 +22,7 @@ const CenteredPage = ({children}) => (
         </Box>
       </Paper>
     </Grid>
-    <Grid item xs={false} sm={2} />
+    <Grid item xs={false} sm={1} />
   </Grid>
 );
 
