@@ -11,8 +11,12 @@ import axios from 'axios';
 // should return none if not (indicating that
 // the user still needs to go through the sign
 // up page and create their profile).
-// const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/auth0';
+
+// Local testing URIs
 const baseURI = 'http://localhost/api/auth0'
+// const baseURI = 'http://localhost:5000/api/auth0'
+
+// Production URIs
 // const baseURI = 'https://5236a6d8b1df.ngrok.io/api/auth0';
 
 
