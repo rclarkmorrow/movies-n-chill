@@ -139,7 +139,7 @@ export const editUserProfile = (props) => {
           'Authorization': `Bearer ${token}`,
           },
         };
-        const response = await axios.patch(`${baseURI}/${user_id}`, values, withHeaders);
+        const response = await axios.patch(`${baseURI}/1`, values, withHeaders);
 
         dispatch(patchUserProfileSuccess(response.data));
       } catch (error) {
