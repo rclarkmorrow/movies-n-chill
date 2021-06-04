@@ -5,7 +5,10 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 // Local imports.
-import { CenteredPage, Error404, Header, Loading } from 'components';
+import {
+  CenteredPage, Error404, Footer,
+  Header, Loading
+} from 'components';
 import { MoviesList } from 'components/views/movies/components';
 import { currentUserSelector } from 'store';
 
@@ -29,6 +32,7 @@ const Movies = () => {
       :  hasErrors &&
         <Error404 />
       }
+      <Footer />
     </>
 );
 };
