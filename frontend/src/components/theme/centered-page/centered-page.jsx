@@ -14,7 +14,7 @@ const CenteredPage = ({children}) => (
   <Grid container>
     <Grid item xs={false} sm={1} />
     <Grid item xs={12} sm={10}>
-      <Paper>
+      <Paper elevation={0} square={true}>
         <Box pt={5}>
           <Grid  container justify="space-around">
             {children}
