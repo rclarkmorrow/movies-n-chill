@@ -4,9 +4,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-
-// const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/users';
+// Local testing URIs.
 const baseURI = 'http://localhost/api/users'
+// const baseURI = 'http://localhost:5000/api/users'
+
+// Production URIs.
 // const baseURI = 'https://5236a6d8b1df.ngrok.io/api/users';
 
 
