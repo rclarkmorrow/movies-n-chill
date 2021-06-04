@@ -57,9 +57,6 @@ const ProfileCard = (props) => {
           <Grid item>
             <Box
               mt={2}
-              // ml={{
-              //   xs: 50,
-              // }}
             >
               <Typography variant="h4">
                 {user_name}
