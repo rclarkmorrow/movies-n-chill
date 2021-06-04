@@ -50,13 +50,14 @@ const ProfileForm = () => {
   const _handleSubmit = async(values, actions) => {
     if (isLastStep) {
       const token = await getAccessTokenSilently();
+      const { sub } = user;
         if (currentUser) {
           const { user_id } = currentUser;
           dispatch(editUserProfile({token, values, user_id }));
+          dispatch(fetchCurrentUser({ sub, token }));
           history.push('/profile');
         } else {
           dispatch(createUserProfile({ token, values }));
-          const { sub } = user;
           dispatch(fetchCurrentUser({ sub, token }));
           history.push('/profile');
         }

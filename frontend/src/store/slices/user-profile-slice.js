@@ -12,8 +12,11 @@ import axios from 'axios'
 // authenticated user to create or edit their
 // profile information.
 
-// const baseURI = 'http://ec2-52-14-4-251.us-east-2.compute.amazonaws.com:5000/users';
-const baseURI = "http://localhost/api/users"  // Local testing
+// Local testing URIs.
+const baseURI = "http://localhost/api/users"
+// const baseURI = 'http://localhost:5000/api/users'
+
+// Production URIs.
 // const baseURI = 'https://5236a6d8b1df.ngrok.io/api/users';
 
 // Set initial state values.
