@@ -72,10 +72,10 @@ const ProfileCard = (props) => {
             >
               <Grid container spacing={1} alignItems="center">
                 <Grid item>
-                  <Favorite fontSize="large"/>
+                  <Favorite />
                 </Grid>
               <Grid item>
-                <Typography variant="h5">
+                <Typography variant="h4">
                   {match_percent} match!
                 </Typography>
               </Grid>
@@ -110,7 +110,7 @@ const ProfileCard = (props) => {
               </Grid>
               <Grid item>
                 <Typography variant="body2">
-                  {email_address}
+                  {phone_number}
                 </Typography>
               </Grid>
             </Grid>
