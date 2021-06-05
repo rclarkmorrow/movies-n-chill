@@ -13,11 +13,13 @@ import axios from 'axios';
 // up page and create their profile).
 
 // Local testing URIs
-const baseURI = 'http://localhost/api/auth0'
+// const baseURI = 'http://localhost/api/auth0'
 // const baseURI = 'http://localhost:5000/api/auth0'
 
 // Production URIs
-// const baseURI = 'https://5236a6d8b1df.ngrok.io/api/auth0';
+const baseURI = 'https://58271de50af4.ngrok.io/api/auth0';
+;
+
 
 
 // Set initial state values.
