@@ -17,8 +17,8 @@ import axios from 'axios';
 // const baseURI = 'http://localhost:5000/api/auth0'
 
 // Production URIs
-const baseURI = 'https://58271de50af4.ngrok.io/api/auth0';
-;
+// const baseURI = 'https://moviesnchill-back.loca.lt/api/auth0';
+const baseURI = 'https://moviesnchill.loca.lt/api/auth0';
 
 
 
