@@ -30,6 +30,7 @@ const MatchesPanel = () => {
                       user_id={match.user_id}
                       user_name={match.user_name}
                       email_address={match.email_address}
+                      phone_number={match.phone_number}
                       picture_url={match.picture_url}
                       city={match.city}
                       state={match.state}
