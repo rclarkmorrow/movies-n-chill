@@ -9,7 +9,8 @@ import axios from 'axios';
 // const baseURI = 'http://localhost:5000/api/users'
 
 // Production URIs.
-const baseURI = 'https://58271de50af4.ngrok.io/api/users';
+// const baseURI = 'https://moviesnchill-back.loca.lt/api/users';
+const baseURI = 'https://moviesnchill.loca.lt/api/users';
 
 
 
