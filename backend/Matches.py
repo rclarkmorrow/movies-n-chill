@@ -17,8 +17,7 @@ class Profiles:
 
            other_user = Profiles.get_user_profile(user+1)
 
-           if (current_user_profile[0] != other_user[0]) and \
-                   ((current_user_profile[1] == other_user[1]) or (current_user_profile[1] == 'Other')):
+           if (current_user_profile[0] != other_user[0]) and (current_user_profile[2] == other_user[1]):
 
                matching_list, matching_percent = Profiles.compare_users(current_user_profile, other_user)
                print('Matching List:', matching_list)
@@ -50,6 +49,7 @@ class Profiles:
         user = Users.query.filter_by(user_id=user).first()
         user_profile = []
         user_profile.append(user.user_id)
+        user_profile.append(user.self_gender)
         user_profile.append(user.seeking_gender)
 
         selected_movies_by_id = SelectedMovies.query.filter_by(user_id=uid)
