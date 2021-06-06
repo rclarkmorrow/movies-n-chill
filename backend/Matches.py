@@ -1,5 +1,6 @@
 from Models import db, Movies, Users, SelectedMovies
 
+
 class Profiles:
 
     def get_matching_users(uid):
@@ -12,25 +13,17 @@ class Profiles:
         matching_users_ids = []
         matching_percentage = []
 
-
         for user in range(num_users):
+            other_user = Profiles.get_user_profile(user+1)
+            if (current_user_profile[0] != other_user[0]) and (current_user_profile[2] == other_user[1]):
 
-           other_user = Profiles.get_user_profile(user+1)
+                matching_list, matching_percent = Profiles.compare_users(current_user_profile, other_user)
 
-           if (current_user_profile[0] != other_user[0]) and (current_user_profile[2] == other_user[1]):
-
-               matching_list, matching_percent = Profiles.compare_users(current_user_profile, other_user)
-               print('Matching List:', matching_list)
-               print('Matching %:', matching_percent)
-               print(' ')
-               if matching_percent >= matching_percentage_threshold:
+                if matching_percent >= matching_percentage_threshold:
                    matching_users_ids.append(user + 1)
                    matching_percentage.append("{:.0%}".format(matching_percent))
-                   print(" ")
-                   print('Preferred Matching UserId:', matching_users_ids)
 
         return matching_users_ids, matching_percentage
-
 
     def compare_users(setA, setB):
 
