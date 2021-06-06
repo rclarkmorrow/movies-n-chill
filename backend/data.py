@@ -44,8 +44,8 @@ class UsersData:
                 , email_address='jane@yahoo.com'
                 , phone_number='999-999-9999'
                 , picture_url='https://randomuser.me/api/portraits/women/81.jpg'
-                , seeking_gender='Female'
-                , self_gender='Male'
+                , seeking_gender='Male'
+                , self_gender='Female'
                 , user_name='Jane'
 
                 , created_by='Script'
