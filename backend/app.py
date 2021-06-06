@@ -5,7 +5,6 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, Blueprint, request, jsonify
 from flask_cors import CORS
-# from jose import jwt
 from Models import db, Movies, Users, SelectedMovies
 from Matches import Profiles
 from auth import AuthError, requires_auth, requires_user_match
@@ -26,14 +25,6 @@ DB_NAME = os.getenv('DB_NAME')
 app.secret_key = 'a secret'
 # # # OLD SQLITEDB CONFIG
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MoviesNChill.db'
-# app.config['SQLALCHEMY_DATABASE_URI'] = \
-#      'postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{db}'.format(
-#         user=DB_USER,
-#         passwd=DB_PASS,
-#         host=DB_HOST,
-#         port=DB_PORT,
-#         db=DB_NAME
-#         )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -81,8 +72,7 @@ def get_and_post_users():
     # to the app)
     if request.method == 'GET':
         users = Users.query.all()
-        # Returned object is a list.
-        print(f'users is type {type(users)}')
+
         # The items in the list are object of type User
         for item in users:
             print(f'type of item in list {type(item)}')
@@ -97,8 +87,7 @@ def get_and_post_users():
         user = request.get_json()
         # if True:
         if requires_user_match(user['auth0_id']):
-            # NOTE: Uncomment to prevent duplicate auth0_id entries
-            print("User auth0_id:" + user['auth0_id'])
+            # To prevent duplicate auth0_id entries
             if Users.query.filter_by(auth0_id=user['auth0_id']).first():
                 return jsonify('user already in database'), 402
 
@@ -124,11 +113,6 @@ def get_and_post_users():
             print(user['movies'])
             if user['movies']:
                 for movie in user['movies']:
-                    # NOTE: Create a function to add movies to the
-                    # database if they are not already in it, and
-                    # create the SelectedMovies records for the
-                    # user.
-
                     exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
                     if exist:
                         print("User exist")
@@ -144,15 +128,10 @@ def get_and_post_users():
 
 
 def add_movie(user, movie):
-    print('ADD MOVIE')
     try:
         # ------------------------------
         # add movie to Movies table
         # ------------------------------
-        print("user id:" + str(user.user_id))
-        print("user name:" + str(user.user_name))
-        print(movie)
-
         mv = Movies(tmdb_id=str(movie['tmdb_id'])
                     , movie_title=str(movie['movie_title'])
                     , url_movie_image=str(movie['url_movie_image'])
@@ -161,80 +140,57 @@ def add_movie(user, movie):
                     , year=str(movie['year'])
                     , created_by='app post'
                     )
-        print("Try to insert new movie")
         mv.insert()
         print("Movie inserted")
         # ------------------------------
         # match movie and user
         # ------------------------------
-
-        print(" ---- Match movie and user ----")
-        print("Match movie tmdb_id: " + str(movie['tmdb_id']))
-        # print("Match user_id: " + str(user.user_id))
         new_movie = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
         add_movie_to_user(user.user_id, new_movie.movie_id)
-        # smv = SelectedMovies(user_id=user.user_id, movie_id=new_movie.movie_id)
-        # smv.insert()
-
     except:  # catch all exceptions
         e = sys.exc_info()[0]
-        print(f'add movie {e}')
-
+        print(f'add movie: {e}')
 
 
 def add_movie_to_user(user_id, movie_id):
-    print("ADDDD")
     try:
-        print(f'in add movie to user- user {user_id}, movie {movie_id}')
         smv = SelectedMovies(user_id=int(user_id), movie_id=int(movie_id))
-        print(f'svm  {smv}')
         smv.insert()
     except:  # catch all exceptions
         e = sys.exc_info()[0]
-        print(e)
+        print(f'add movie to the user: {e}')
 
 
 def remove_movie_from_user(curr_map):
     try:
-        print("--- Delete existing User and Movies mapping ----")
-
         for curr in curr_map:
             smv = SelectedMovies.query.filter_by(user_id=curr.user_id, movie_id=curr.movie_id).first()
             smv.delete()
-
     except:  # catch all exceptions
         e = sys.exc_info()[0]
         print(f'remove movie {e}')
+
 
 # Get delete or patch user by ID.
 @api.route('/users/<uid>', methods=['GET', 'PATCH', 'DELETE'])
 @requires_auth
 def get_patch_or_delete_user(uid):
-    print(f'UID is: {uid}')
-    print(f'today: {datetime.date.today()}')  # {datetime.date.today()}')
+
     user = Users.query.filter_by(user_id=uid).first_or_404\
             (description='There is no data with {}'.format(uid))
 
     if request.method == 'GET':
-        # Returned object is a list.
-        print(f'usr is type {type(user)}')
         # The items in the list are object of type User
         return jsonify(user.with_movies())
-    # if True:
+
     if requires_user_match(user.auth0_id):
         if request.method == 'PATCH':  # Update a user with movies
-            print("----- Edit -------")
-
             req = request.get_json()
-            print(req)
             # return req
             for key, value in req.items():
                 if key != 'movies':
                     setattr(user, key, value)
             user.modified_by = 'api patch'
-
-            print("Edit user: " + uid)
-            # print("req['movies']: " + str(req['movies']))
 
             # Remove movies that are not in the new mapping list
             existing_map = SelectedMovies.query.filter_by(user_id=uid)
@@ -243,26 +199,17 @@ def get_patch_or_delete_user(uid):
             # Add and map new movie selection to the user
             if req['movies']:
                 for movie in req['movies']:
-                    print("movie['tmdb_id'] :" + str(movie['tmdb_id']))
                     exist = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first() is not None
-                    # print("Exist result : " + str(exist))
                     if exist:
-                        # print("Movie exist")
-                        # print("Movie TMDB ID: " + str(movie['tmdb_id']))
                         existing_movie = Movies.query.filter_by(tmdb_id=movie['tmdb_id']).first()
-                        # print("MID: " + str(existing_movie.movie_id))
                         mapped = SelectedMovies.query.filter_by(user_id=uid
                                                                 , movie_id=existing_movie.movie_id).first() is not None
 
                         if mapped:  # Already mapped with the user
-                            print('mapped')
                             pass
                         else:  # Movie exists but not map with the user
-                            # print("Map movie to user: " + str(existing_movie.movie_title))
                             add_movie_to_user(uid, existing_movie.movie_id)
-
                     else:
-                        # print("New movie :" + str(movie['tmdb_id']))
                         add_movie(user, movie)  # Add new movie to Movies table and map with the user
 
             user.update()
@@ -277,13 +224,8 @@ def get_patch_or_delete_user(uid):
 # Get and post movies
 @api.route('/movies', methods=['GET'])
 def get_movies():
-    # NOTE: Remove for production
-    # version (we are not returning a list of movies
-    # to the app)
     if request.method == 'GET':
         movies = Movies.query.all()
-        # Returned object is a list.
-        print(f'movie is type {type(movies)}')
         # The items in the list are object of type User
         for item in movies:
             print(f'type of item in list {type(item)}')
@@ -297,9 +239,6 @@ def get_movies():
 @api.route('/movies/<mid>', methods=['PATCH', 'DELETE'])
 @requires_auth
 def patch_delete_movies(mid):
-    # NOTE: Remove for production
-    # version (we are not returning a list of movies
-    # to the app)
     if request.method == 'DELETE':
         movie = Movies.query.filter_by(movie_id=mid).first_or_404 \
             (description='There is no data with {}'.format(mid))
@@ -312,13 +251,9 @@ def patch_delete_movies(mid):
 @api.route('/auth0/<aid>', methods=['GET'])
 @requires_auth
 def get_user_by_autho_id(aid):
-    print(f'AUID is: {aid}')
-    print(f'today: {datetime.date.today()}')  # {datetime.date.today()}')
     user = Users.query.filter_by(auth0_id=aid).first_or_404 \
         (description='There is no data with {}'.format(aid))
     if request.method == 'GET':
-        # Returned object is a list.
-        print(f'usr is type {type(user)}')
         # The items in the list are object of type User
         return jsonify(user.with_movies())
     else:
@@ -330,8 +265,6 @@ def get_user_by_autho_id(aid):
 def get_data_in_selected_movie():
     if request.method == 'GET':
         selectedmoives = SelectedMovies.query.all()
-        # Returned object is a list.
-        print(f'Selectedmoives is type {type(selectedmoives)}')
         # The items in the list are object of type User
         for item in selectedmoives:
             print(f'type of item in list {type(item)}')
@@ -353,8 +286,6 @@ def get_user_matches(uid):
     # if True:
     if requires_user_match(user.auth0_id):
         matching_users, matching_percentage = Profiles.get_matching_users(uid)
-        print('matching_user', matching_users)
-
         musers = []
         for usr in matching_users:
             musers.append(Users.query.filter_by(user_id=usr).first())
