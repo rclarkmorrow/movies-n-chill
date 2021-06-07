@@ -42,7 +42,8 @@ const formModel = {
     },
     seeking_gender: {
       name: 'seeking_gender',
-      label: 'I am interested in*'
+      label: 'I am interested in*',
+      required_err_msg: 'This field is required'
     },
     movies: {
       name: 'movies',
