@@ -47,7 +47,7 @@ const validationSchema = [
       .required(`${city.required_err_msg}`),
     [seeking_gender.name]: Yup.string()
       .oneOf(genderValues.map((gender) => gender.value))
-      .required(`${city.required_err_msg}`)
+      .required(`${seeking_gender.required_err_msg}`)
   }),
   Yup.object().shape({
     [movies.name]: Yup.array()
