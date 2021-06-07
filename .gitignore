@@ -14,3 +14,5 @@ yarn-error.log*
 
 __pycache__
 postgres_data/
+env-top-level
+env-backend
