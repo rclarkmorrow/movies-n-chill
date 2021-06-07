@@ -1,9 +1,20 @@
 from Models import db, Movies, Users, SelectedMovies
 
+"""
+This program calculates matching percentage.
+
+Input: users, user preferences
+Output: % match, matching users
+"""
+
 
 class Profiles:
 
     def get_matching_users(uid):
+        """
+        The method calculates matching percentage and matching users
+        Users will be matched if matching percentage >= 50%
+        """
 
         matching_percentage_threshold = 0.50  # users will be matched if matching percentage >= 50%
 
@@ -14,19 +25,21 @@ class Profiles:
         matching_percentage = []
 
         for user in range(num_users):
-            other_user = Profiles.get_user_profile(user+1)
+
+            other_user = Profiles.get_user_profile(user + 1)
+
             if (current_user_profile[0] != other_user[0]) and (current_user_profile[2] == other_user[1]):
-
                 matching_list, matching_percent = Profiles.compare_users(current_user_profile, other_user)
-
                 if matching_percent >= matching_percentage_threshold:
-                   matching_users_ids.append(user + 1)
-                   matching_percentage.append("{:.0%}".format(matching_percent))
+                    matching_users_ids.append(user + 1)
+                    matching_percentage.append("{:.0%}".format(matching_percent))
 
         return matching_users_ids, matching_percentage
 
     def compare_users(setA, setB):
-
+        """
+        This method compares two users using Set Operations.
+        """
         a = setA
         b = setB
 
@@ -38,6 +51,9 @@ class Profiles:
         return matching_list, matching_percent
 
     def get_user_profile(uid):
+        """
+        This method get user profiles from the database
+        """
         user = uid
         user = Users.query.filter_by(user_id=user).first()
         user_profile = []
