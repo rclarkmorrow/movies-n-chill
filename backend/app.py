@@ -23,9 +23,18 @@ DB_NAME = os.getenv('DB_NAME')
 
 
 app.secret_key = 'a secret'
+
 # # # OLD SQLITEDB CONFIG
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MoviesNChill.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///MoviesNChill.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+    'postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{db}'.format(
+        user=DB_USER,
+        passwd=DB_PASS,
+        host=DB_HOST,
+        port=DB_PORT,
+        db=DB_NAME
+    )
+
 
 db.init_app(app)
 
